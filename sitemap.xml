@@ -158,8 +158,27 @@
     
     <url>
     
+      <loc>/publication/moocs-what-tell/</loc>
+      <lastmod>2015-06-02T00:00:00+00:00</lastmod>
+    </url>
+    
+  
+    
+    
+    <url>
+    
       <loc>/post/migrate-from-jekyll/</loc>
       <lastmod>2014-03-10T00:00:00-07:00</lastmod>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/publication_types/1/</loc>
+      <lastmod>2015-06-02T00:00:00+00:00</lastmod>
+      <priority>0</priority>
     </url>
     
   
