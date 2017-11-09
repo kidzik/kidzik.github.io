@@ -9,7 +9,7 @@ title = "Golf swing analysis app"
 summary = "Using modern methods for pose estimation to evaluate a golf swing"
 
 # Optional image to display on homepage (relative to `static/img/` folder).
-image_preview = "headers/golf.png"
+image_preview = "headers/golf.jpg"
 
 # Tags: can be used for filtering projects.
 # Example: `tags = ["machine-learning", "deep-learning"]`
@@ -23,7 +23,7 @@ math = false
 
 # Optional featured image (relative to `static/img/` folder).
 [header]
-image = "headers/golf.png"
+image = "golf.png"
 caption = "My caption :smile:"
 
 +++
