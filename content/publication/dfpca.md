@@ -33,7 +33,7 @@ selected = true
 # Projects (optional).
 #   Associate this publication with one or more of your projects.
 #   Simply enter the filename (excluding '.md') of your project file in `content/project/`.
-projects = ["time-series","functional-data"]
+# projects = ["time-series","functional-data"]
 
 # Links (optional).
 url_pdf = "http://onlinelibrary.wiley.com/doi/10.1111/rssb.12076/abstract"
