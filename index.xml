@@ -29,6 +29,26 @@
     </item>
     
     <item>
+      <title>Principal component analysis of periodically correlated functional time series</title>
+      <link>/publication/periodically-correlated/</link>
+      <pubDate>Sat, 01 Jul 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/publication/periodically-correlated/</guid>
+      <description>&lt;!-- More detail can easily be written here using *Markdown* and $\rm \LaTeX$ math code. --&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Orchestration Load Indicators and Patterns: In-the-wild Studies Using Mobile Eye-tracking</title>
+      <link>/publication/orchestration/</link>
+      <pubDate>Fri, 02 Jun 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/publication/orchestration/</guid>
+      <description>&lt;!-- More detail can easily be written here using *Markdown* and $\rm \LaTeX$ math code. --&gt;
+</description>
+    </item>
+    
+    <item>
       <title>How did we learn to walk?</title>
       <link>/talk/example-talk/</link>
       <pubDate>Sun, 01 Jan 2017 00:00:00 -0800</pubDate>
@@ -43,7 +63,9 @@
       <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
       
       <guid>/project/deepart/</guid>
-      <description>&lt;p&gt;
+      <description>&lt;p&gt;Astonishing results from the &lt;a href=&#34;https://arxiv.org/pdf/1508.06576.pdf&#34; target=&#34;_blank&#34;&gt;original style transfer paper&lt;/a&gt; motivated me and Michał Warchoł to implement the first transfer platform and make it available to the public. After the prompt success we joined the forces with the authors of the orginal algorithm (Leon Gatys, Alexander Ecker and Mathias Bethge) and we continued working together on delivering tools for creating artworks within a few clicks. Visit &lt;a href=&#34;https://deepart.io/&#34; target=&#34;_blank&#34;&gt;deepart.io&lt;/a&gt; and try it out!&lt;/p&gt;
+
+&lt;p&gt;
 &lt;div style=&#34;position: relative; padding-bottom: 56.25%; padding-top: 30px; height: 0; overflow: hidden;&#34;&gt;
   &lt;iframe src=&#34;//www.youtube.com/embed/olj6rktnr40&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%;&#34; allowfullscreen frameborder=&#34;0&#34; title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
  &lt;/div&gt;
@@ -58,7 +80,8 @@
       <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
       
       <guid>/project/freeboost/</guid>
-      <description></description>
+      <description>&lt;p&gt;Together with my Stanford colleagues (Ben Kotopka, Alexander Onopa and Owen Philips) we developped an MRI brain segmentation tool. Find out more on the &lt;a href=&#34;http://freeboost.org/&#34; target=&#34;_blank&#34;&gt;project website&lt;/a&gt;.&lt;/p&gt;
+</description>
     </item>
     
     <item>
@@ -67,7 +90,9 @@
       <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
       
       <guid>/project/kinemai/</guid>
-      <description>&lt;p&gt;
+      <description>&lt;p&gt;During &lt;a href=&#34;https://www.gsb.stanford.edu/programs/stanford-ignite&#34; target=&#34;_blank&#34;&gt;Stanford Ignite progrem&lt;/a&gt;, together with my teammates we were evaluating commercial opportunities of applying AI for sport&amp;rsquo;s coaching. We prototyped a mobile app using pose estimation algorithms for improving golf swing performance.&lt;/p&gt;
+
+&lt;p&gt;
 &lt;div style=&#34;position: relative; padding-bottom: 56.25%; padding-top: 30px; height: 0; overflow: hidden;&#34;&gt;
   &lt;iframe src=&#34;//www.youtube.com/embed/SjPP5x1csOc&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%;&#34; allowfullscreen frameborder=&#34;0&#34; title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
  &lt;/div&gt;
@@ -84,7 +109,7 @@
       <guid>/project/deep-learning/</guid>
       <description>&lt;p&gt;Human movement results from the intricate coordination of muscles, tendons, joints, and other physiological elements. While children learn to walk, run, climb, and jump in their first years of life and most of us can navigate complex environments&amp;ndash;like a crowded street or moving subway&amp;ndash;without considerable active attention, developing controllers that can efficiently and robustly synthesize realistic human motions in a variety of environments remains a grand challenge for biomechanists, neuroscientists, and computer scientists. Current controllers are confined to a small set of pre-specified movements or driven by torques, rather than the complex muscle actuators found in humans.&lt;/p&gt;
 
-&lt;p&gt;To solve these research problems, we created a virtual physiologically accurate musucluskeletal environment in OpenSim software and we set up &lt;a href=&#34;https://www.crowdai.org/challenges/nips-2017-learning-to-run&#34; target=&#34;_blank&#34;&gt;a competition to build models of the brain&lt;/a&gt;. Competition was accepted as one of the 5 official competitions at NIPS 2017. Here is one of the solutions.&lt;/p&gt;
+&lt;p&gt;To solve these research problems, we created a virtual physiologically accurate musucluskeletal environment in OpenSim software. I set up &lt;a href=&#34;https://www.crowdai.org/challenges/nips-2017-learning-to-run&#34; target=&#34;_blank&#34;&gt;a competition to build models of the brain&lt;/a&gt;. Competition was accepted as one of the 5 official competitions at NIPS 2017. Here is one of the solutions.&lt;/p&gt;
 
 &lt;p&gt;
 &lt;div style=&#34;position: relative; padding-bottom: 56.25%; padding-top: 30px; height: 0; overflow: hidden;&#34;&gt;
@@ -1140,66 +1165,12 @@ y &amp;amp;=&amp;amp; 1+1   \\\\\\
     </item>
     
     <item>
-      <title>Dynamic Functional Principal Component</title>
-      <link>/publication/dfpca/</link>
-      <pubDate>Tue, 02 Jun 2015 00:00:00 +0000</pubDate>
+      <title>Estimation in functional lagged regression</title>
+      <link>/publication/lagged-regression/</link>
+      <pubDate>Wed, 01 Jul 2015 00:00:00 +0000</pubDate>
       
-      <guid>/publication/dfpca/</guid>
+      <guid>/publication/lagged-regression/</guid>
       <description>&lt;!-- More detail can easily be written here using *Markdown* and $\rm \LaTeX$ math code. --&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>MOOC video interaction patterns: What do they tell us?</title>
-      <link>/publication/moocs-what-tell/</link>
-      <pubDate>Tue, 02 Jun 2015 00:00:00 +0000</pubDate>
-      
-      <guid>/publication/moocs-what-tell/</guid>
-      <description>&lt;!-- More detail can easily be written here using *Markdown* and $\rm \LaTeX$ math code. --&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Migrate from Jekyll to Hugo</title>
-      <link>/post/migrate-from-jekyll/</link>
-      <pubDate>Mon, 10 Mar 2014 00:00:00 -0700</pubDate>
-      
-      <guid>/post/migrate-from-jekyll/</guid>
-      <description>
-
-&lt;p&gt;Here are a few tips for migrating an existing website from Jekyll to Hugo. These tips can be applied in conjunction with following Hugo Academic&amp;rsquo;s &lt;a href=&#34;/post/getting-started/&#34; target=&#34;_blank&#34;&gt;getting started guide&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h2 id=&#34;move-static-content-to-static&#34;&gt;Move static content to &lt;code&gt;static&lt;/code&gt;&lt;/h2&gt;
-
-&lt;p&gt;Jekyll has a rule that any directory not starting with &lt;code&gt;_&lt;/code&gt; will be copied as-is to the &lt;code&gt;_site&lt;/code&gt; output. Hugo keeps all static content under &lt;code&gt;static&lt;/code&gt;. You should therefore move it all there.
-With Jekyll, something that looked like&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;▾ &amp;lt;root&amp;gt;/
-    ▾ images/
-        logo.png
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;should become&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;▾ &amp;lt;root&amp;gt;/
-    ▾ static/
-        ▾ images/
-            logo.png
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Additionally, you&amp;rsquo;ll want any files that should reside at the root (such as &lt;code&gt;CNAME&lt;/code&gt;) to be moved to &lt;code&gt;static&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h2 id=&#34;fix-content&#34;&gt;Fix content&lt;/h2&gt;
-
-&lt;p&gt;Depending on the amount of customization that was done for each post in Jekyll, this step will require more or less effort. There are no hard and fast rules here except that &lt;code&gt;hugo server --watch&lt;/code&gt; and the Hugo Academic example site are your friends. Test your changes and fix errors as needed.&lt;/p&gt;
-
-&lt;h2 id=&#34;publish&#34;&gt;Publish&lt;/h2&gt;
-
-&lt;p&gt;The default is for Jekyll to publish the website to a &lt;code&gt;_site&lt;/code&gt; directory, whereas Hugo publishes to a &lt;code&gt;public&lt;/code&gt; directory.&lt;/p&gt;
-
-&lt;h2 id=&#34;a-practical-example&#34;&gt;A practical example&lt;/h2&gt;
-
-&lt;p&gt;Alexandre Normand migrated his website from Jekyll to Hugo in less than a day. You can see all his changes by looking at this GitHub &lt;a href=&#34;https://github.com/alexandre-normand/alexandre-normand/compare/869d69435bd2665c3fbf5b5c78d4c22759d7613a...b7f6605b1265e83b4b81495423294208cc74d610&#34; target=&#34;_blank&#34;&gt;diff&lt;/a&gt;. However, bear in mind that this example is &lt;strong&gt;not specific to the Academic theme nor does it use the latest version of Hugo&lt;/strong&gt;.&lt;/p&gt;
 </description>
     </item>
     

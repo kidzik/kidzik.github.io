@@ -11,6 +11,36 @@
     <atom:link href="/publication/" rel="self" type="application/rss+xml" />
     
     <item>
+      <title>Principal component analysis of periodically correlated functional time series</title>
+      <link>/publication/periodically-correlated/</link>
+      <pubDate>Sat, 01 Jul 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/publication/periodically-correlated/</guid>
+      <description>&lt;!-- More detail can easily be written here using *Markdown* and $\rm \LaTeX$ math code. --&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Orchestration Load Indicators and Patterns: In-the-wild Studies Using Mobile Eye-tracking</title>
+      <link>/publication/orchestration/</link>
+      <pubDate>Fri, 02 Jun 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/publication/orchestration/</guid>
+      <description>&lt;!-- More detail can easily be written here using *Markdown* and $\rm \LaTeX$ math code. --&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Estimation in functional lagged regression</title>
+      <link>/publication/lagged-regression/</link>
+      <pubDate>Wed, 01 Jul 2015 00:00:00 +0000</pubDate>
+      
+      <guid>/publication/lagged-regression/</guid>
+      <description>&lt;!-- More detail can easily be written here using *Markdown* and $\rm \LaTeX$ math code. --&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Dynamic Functional Principal Component</title>
       <link>/publication/dfpca/</link>
       <pubDate>Tue, 02 Jun 2015 00:00:00 +0000</pubDate>
@@ -21,11 +51,41 @@
     </item>
     
     <item>
+      <title>How Do In-video Interactions Reflect Perceived Video Difficulty?</title>
+      <link>/publication/how-do-video/</link>
+      <pubDate>Tue, 02 Jun 2015 00:00:00 +0000</pubDate>
+      
+      <guid>/publication/how-do-video/</guid>
+      <description>&lt;!-- More detail can easily be written here using *Markdown* and $\rm \LaTeX$ math code. --&gt;
+</description>
+    </item>
+    
+    <item>
       <title>MOOC video interaction patterns: What do they tell us?</title>
       <link>/publication/moocs-what-tell/</link>
       <pubDate>Tue, 02 Jun 2015 00:00:00 +0000</pubDate>
       
       <guid>/publication/moocs-what-tell/</guid>
+      <description>&lt;!-- More detail can easily be written here using *Markdown* and $\rm \LaTeX$ math code. --&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Translating head motion into attention-towards processing of student’s body-language</title>
+      <link>/publication/head/</link>
+      <pubDate>Tue, 02 Jun 2015 00:00:00 +0000</pubDate>
+      
+      <guid>/publication/head/</guid>
+      <description>&lt;!-- More detail can easily be written here using *Markdown* and $\rm \LaTeX$ math code. --&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>A note on estimation in Hilbertian linear models</title>
+      <link>/publication/hilbertian-linear/</link>
+      <pubDate>Sun, 01 Mar 2015 00:00:00 +0000</pubDate>
+      
+      <guid>/publication/hilbertian-linear/</guid>
       <description>&lt;!-- More detail can easily be written here using *Markdown* and $\rm \LaTeX$ math code. --&gt;
 </description>
     </item>
