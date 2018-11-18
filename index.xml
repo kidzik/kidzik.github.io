@@ -52,7 +52,7 @@
 
 &lt;p&gt;Here, the connected dots come from individual subjects and the black thick line corresponds to the population mean.&lt;/p&gt;
 
-&lt;p&gt;In this package we follow the methodology from &lt;a href=&#34;https://arxiv.org/abs/1809.08771&#34; target=&#34;_blank&#34;&gt;Kidziński, Hastie (2018)&lt;/a&gt; to fit trajectories using matrix completion. To this end, we discretize the time grid some continous basis and find a low-rank decomposition of the dense matrix.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;I&amp;rsquo;ve build the package to fit trajectories using matrix completion and I described the methodology in my recent paper &lt;a href=&#34;https://arxiv.org/abs/1809.08771&#34; target=&#34;_blank&#34;&gt;Kidziński, Hastie (2018)&lt;/a&gt;.&lt;/strong&gt; To this end, we discretize the time grid some continous basis and find a low-rank decomposition of the dense matrix.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&#34;https://s3-eu-west-1.amazonaws.com/kidzinski/kidzinski/fcomplete/intro-1.png&#34; alt=&#34;Matrix completion and sparse longitudinal completion&#34; /&gt;&lt;/p&gt;
 
@@ -94,7 +94,7 @@ print(model)
       <pubDate>Fri, 01 Jun 2018 00:00:00 +0000</pubDate>
       
       <guid>/project/healthai/</guid>
-      <description>&lt;p&gt;Bringing together experts from Schools of Medicine, Engineering, and Business at Stanford to tackle medical problems at scale using state-of-the-art AI methods. Three main&lt;/p&gt;
+      <description>&lt;p&gt;In April 2018 I started the &lt;a href=&#34;http://healthai.stanford.edu/&#34; target=&#34;_blank&#34;&gt;HealthAI working group&lt;/a&gt;. Our mission is to bring together experts from Schools of Medicine, Engineering, and Business at Stanford to tackle medical problems at scale using state-of-the-art AI methods. Three main&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;Problems &amp;amp; solutions:&lt;/strong&gt; Find out what problems are researchers facing in medical fields. See new methods from CS researchers.
@@ -116,7 +116,7 @@ settings&lt;/p&gt;&lt;/li&gt;
       <pubDate>Sun, 01 Oct 2017 00:00:00 +0000</pubDate>
       
       <guid>/project/video-analysis/</guid>
-      <description>&lt;p&gt;Stroke, Parkinson&amp;rsquo;s disease, cerebral palsy, multiple sclerosis, and other neurological and orthopedic conditions cause movement impairments that fundamentally limit patients&amp;rsquo; daily function and social participation. Quantitative assessment of movement is critical to medical decision making, but is currently possible only with expensive optical motion capture systems and highly-trained personnel, raising the cost of, and severely restricting access to this diagnostic data. The result of this constraint is limited and socio-economically unbalanced utilization of quantitative motion analyisis. These restrictions hinder early detection of disease, access to expert advice, large-scale research, and routine pre- and post-treatment monitoring. We propose a method for estimating a variety of clinically relevant movement parameters from a video of a patient, allowing for quantitative gait analysis using commodity mobile devices.&lt;/p&gt;
+      <description>&lt;p&gt;Stroke, Parkinson&amp;rsquo;s disease, cerebral palsy, multiple sclerosis, and other neurological and orthopedic conditions cause movement impairments that fundamentally limit patients&amp;rsquo; daily function and social participation. Quantitative assessment of movement is critical to medical decision making, but is currently possible only with expensive optical motion capture systems and highly-trained personnel, raising the cost of, and severely restricting access to this diagnostic data. The result of this constraint is limited and socio-economically unbalanced utilization of quantitative motion analyisis. These restrictions hinder early detection of disease, access to expert advice, large-scale research, and routine pre- and post-treatment monitoring. I proposed a method for estimating a variety of clinically relevant movement parameters from a video of a patient, allowing for quantitative gait analysis using commodity mobile devices.&lt;/p&gt;
 
 &lt;p&gt;
 &lt;div style=&#34;position: relative; padding-bottom: 56.25%; padding-top: 30px; height: 0; overflow: hidden;&#34;&gt;
@@ -208,9 +208,9 @@ settings&lt;/p&gt;&lt;/li&gt;
       <guid>/project/nips-learning-to-run/</guid>
       <description>
 
-&lt;p&gt;Use my musculoskeletal reinforcement learning environment for other projects in computer science, neuroscience, biomechanics, etc.&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;ve build a musculoskeletal reinforcement learning environment for studying motor control using modern methods from computer science, neuroscience, biomechanics, etc.&lt;/p&gt;
 
-&lt;p&gt;We set up a competition to build models of the brain in the &lt;a href=&#34;platform&#34; target=&#34;_blank&#34;&gt;crowdAI&lt;/a&gt;. Competition was accepted as one of the 5 official competitions at  &lt;a href=&#34;https://www.crowdai.org/challenges/nips-2017-learning-to-run&#34; target=&#34;_blank&#34;&gt;NIPS 2017&lt;/a&gt; and one of 8 competitions at &lt;a href=&#34;https://www.crowdai.org/challenges/nips-2018-ai-for-prosthetics-challenge&#34; target=&#34;_blank&#34;&gt;NIPS 2018&lt;/a&gt;, attracting over 500 teams from all over the world.&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;ve set up a competition to build models of the brain in the &lt;a href=&#34;platform&#34; target=&#34;_blank&#34;&gt;crowdAI&lt;/a&gt;. Competition was accepted as one of the 5 official competitions at  &lt;a href=&#34;https://www.crowdai.org/challenges/nips-2017-learning-to-run&#34; target=&#34;_blank&#34;&gt;NIPS 2017&lt;/a&gt; and one of 8 competitions at &lt;a href=&#34;https://www.crowdai.org/challenges/nips-2018-ai-for-prosthetics-challenge&#34; target=&#34;_blank&#34;&gt;NIPS 2018&lt;/a&gt;, attracting over 500 teams from all over the world.&lt;/p&gt;
 
 &lt;p&gt;Here are some solutions from the first challenge&lt;/p&gt;
 

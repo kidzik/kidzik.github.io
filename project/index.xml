@@ -21,7 +21,7 @@
       <description>Suppose we observe N subjects, each subject at multiple timepoints and we want to estimate a trajectory of progression of measurements in individual subjects. For example, suppose you observe BMI of N children at different ages, as presented below
 
 Here, the connected dots come from individual subjects and the black thick line corresponds to the population mean.
-In this package we follow the methodology from Kidziński, Hastie (2018) to fit trajectories using matrix completion.</description>
+I&amp;rsquo;ve build the package to fit trajectories using matrix completion and I described the methodology in my recent paper Kidziński, Hastie (2018).</description>
     </item>
     
     <item>
@@ -30,9 +30,8 @@ In this package we follow the methodology from Kidziński, Hastie (2018) to fit 
       <pubDate>Fri, 01 Jun 2018 00:00:00 +0000</pubDate>
       
       <guid>/project/healthai/</guid>
-      <description>Bringing together experts from Schools of Medicine, Engineering, and Business at Stanford to tackle medical problems at scale using state-of-the-art AI methods. Three main
- Problems &amp;amp; solutions: Find out what problems are researchers facing in medical fields. See new methods from CS researchers. group Hackathons: Once we see some matches between problems and techniques we can approach them with quick &amp;lsquo;fail-fast&amp;rsquo; sessions. settings
- Lectures &amp;amp; workshops: Learn new methods and tools applicable in your research from faculty, visiting professors and students.</description>
+      <description>In April 2018 I started the HealthAI working group. Our mission is to bring together experts from Schools of Medicine, Engineering, and Business at Stanford to tackle medical problems at scale using state-of-the-art AI methods. Three main
+ Problems &amp;amp; solutions: Find out what problems are researchers facing in medical fields. See new methods from CS researchers. group Hackathons: Once we see some matches between problems and techniques we can approach them with quick &amp;lsquo;fail-fast&amp;rsquo; sessions.</description>
     </item>
     
     <item>
@@ -60,10 +59,9 @@ In this package we follow the methodology from Kidziński, Hastie (2018) to fit 
       <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
       
       <guid>/project/nips-learning-to-run/</guid>
-      <description>Use my musculoskeletal reinforcement learning environment for other projects in computer science, neuroscience, biomechanics, etc.
-We set up a competition to build models of the brain in the crowdAI. Competition was accepted as one of the 5 official competitions at NIPS 2017 and one of 8 competitions at NIPS 2018, attracting over 500 teams from all over the world.
-Here are some solutions from the first challenge
-   You can find the code on the official website.</description>
+      <description>I&amp;rsquo;ve build a musculoskeletal reinforcement learning environment for studying motor control using modern methods from computer science, neuroscience, biomechanics, etc.
+I&amp;rsquo;ve set up a competition to build models of the brain in the crowdAI. Competition was accepted as one of the 5 official competitions at NIPS 2017 and one of 8 competitions at NIPS 2018, attracting over 500 teams from all over the world.
+Here are some solutions from the first challenge</description>
     </item>
     
   </channel>

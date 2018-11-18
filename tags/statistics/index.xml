@@ -21,7 +21,7 @@
       <description>Suppose we observe N subjects, each subject at multiple timepoints and we want to estimate a trajectory of progression of measurements in individual subjects. For example, suppose you observe BMI of N children at different ages, as presented below
 
 Here, the connected dots come from individual subjects and the black thick line corresponds to the population mean.
-In this package we follow the methodology from Kidziński, Hastie (2018) to fit trajectories using matrix completion.</description>
+I&amp;rsquo;ve build the package to fit trajectories using matrix completion and I described the methodology in my recent paper Kidziński, Hastie (2018).</description>
     </item>
     
   </channel>
