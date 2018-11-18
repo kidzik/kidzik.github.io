@@ -8,7 +8,84 @@
     <language>en-us</language>
     <copyright>&amp;copy; 2017 Łukasz Kidziński</copyright>
     <lastBuildDate>Sun, 15 Oct 2017 00:00:00 -0700</lastBuildDate>
-    <atom:link href="/home/" rel="self" type="application/rss+xml" />
+    
+	<atom:link href="/home/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Statistician</title>
+      <link>/home/hero/</link>
+      <pubDate>Sun, 15 Oct 2017 00:00:00 -0700</pubDate>
+      
+      <guid>/home/hero/</guid>
+      <description>Designing new machine learning tools for high-dimensional time series and longitudinal data. Applying deep reinforcement learning and computer vision in biomechanics. A co-founder of DeepArt - the neural style transfer company. Constantly looking for new opportunities and challenges 🚀  Latest release  
+(function defer() { if (window.jQuery) { jQuery(document).ready(function(){ GetLatestReleaseInfo(); }); } else { setTimeout(function() { defer() }, 50); } })(); function GetLatestReleaseInfo() { $.getJSON(&#39;https://api.github.com/repos/gcushen/hugo-academic/tags&#39;).done(function (json) { let release = json[0]; // let downloadURL = release.</description>
+    </item>
+    
+    <item>
+      <title>Recent projects</title>
+      <link>/home/projects/</link>
+      <pubDate>Wed, 20 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/home/projects/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Media</title>
+      <link>/home/press/</link>
+      <pubDate>Wed, 20 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/home/press/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>/home/about/</link>
+      <pubDate>Wed, 20 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/home/about/</guid>
+      <description>Biography Łukasz Kidziński is a researcher in the Mobilize Center at Stanford, working on the intersection of computer science, statistics, and biomechanics. Previously a researcher in the CHILI group, Computer-Human Interaction in Learning and Instruction, at the EPFL.
+He obtain his Ph.D. training at Université Libre de Bruxelles in mathematical statistics, working on time series analysis and functional data. He obtained two master degrees, in mathematics and in computer science, from the University of Warsaw.</description>
+    </item>
+    
+    <item>
+      <title>Selected Publications</title>
+      <link>/home/publications_selected/</link>
+      <pubDate>Wed, 20 Apr 2016 00:00:00 -0700</pubDate>
+      
+      <guid>/home/publications_selected/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Recent Publications</title>
+      <link>/home/publications/</link>
+      <pubDate>Wed, 20 Apr 2016 00:00:00 -0700</pubDate>
+      
+      <guid>/home/publications/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Teaching</title>
+      <link>/home/teaching/</link>
+      <pubDate>Wed, 20 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/home/teaching/</guid>
+      <description>I was a teaching instructor for the following courses:
+ CS-411: Digital education &amp;amp; learning analytics, fall 2014, EPFL MATHF309: Analyse Multivariée, spring 2014, ULB (in french) STATF407: Stochastic Models, fall 2013, ULB STATF407: Stochastic Models, fall 2012, ULB  </description>
+    </item>
+    
+    <item>
+      <title>Contact</title>
+      <link>/home/contact/</link>
+      <pubDate>Wed, 20 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/home/contact/</guid>
+      <description></description>
+    </item>
     
   </channel>
 </rss>

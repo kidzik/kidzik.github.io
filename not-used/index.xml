@@ -8,7 +8,9 @@
     <language>en-us</language>
     <copyright>&amp;copy; 2017 Łukasz Kidziński</copyright>
     <lastBuildDate>Wed, 20 Apr 2016 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/not-used/" rel="self" type="application/rss+xml" />
+    
+	<atom:link href="/not-used/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>Recent &amp; Upcoming Talks</title>
@@ -26,6 +28,25 @@
       
       <guid>/not-used/posts/</guid>
       <description></description>
+    </item>
+    
+    <item>
+      <title>FreeBoost - MRI segmentation</title>
+      <link>/not-used/freeboost/</link>
+      <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/not-used/freeboost/</guid>
+      <description>Together with my Stanford colleagues (Ben Kotopka, Alexander Onopa and Owen Philips) we developped an MRI brain segmentation tool. Find out more on the project website.</description>
+    </item>
+    
+    <item>
+      <title>Golf swing analysis app</title>
+      <link>/not-used/kinemai/</link>
+      <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/not-used/kinemai/</guid>
+      <description>During Stanford Ignite progrem, together with my teammates we were evaluating commercial opportunities of applying AI for sport&amp;rsquo;s coaching. We prototyped a mobile app using pose estimation algorithms for improving golf swing performance.
+   </description>
     </item>
     
   </channel>

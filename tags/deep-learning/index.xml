@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Deep-learning on Łukasz Kidziński</title>
+    <link>/tags/deep-learning/</link>
+    <description>Recent content in Deep-learning on Łukasz Kidziński</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2017 Łukasz Kidziński</copyright>
+    <lastBuildDate>Wed, 27 Apr 2016 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/deep-learning/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>DeepArt - Neural style platform</title>
+      <link>/project/deepart/</link>
+      <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/project/deepart/</guid>
+      <description>Astonishing results from the original style transfer paper motivated me and Michał Warchoł to implement the first transfer platform and make it available to the public. After the prompt success we joined the forces with the authors of the orginal algorithm (Leon Gatys, Alexander Ecker and Mathias Bethge) and we continued working together on delivering tools for creating artworks within a few clicks. Visit deepart.io and try it out!
+   </description>
+    </item>
+    
+    <item>
+      <title>DeepArt - Neural style platform</title>
+      <link>/project/longitudinal-data/</link>
+      <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/project/longitudinal-data/</guid>
+      <description>Astonishing results from the original style transfer paper motivated me and Michał Warchoł to implement the first transfer platform and make it available to the public. After the prompt success we joined the forces with the authors of the orginal algorithm (Leon Gatys, Alexander Ecker and Mathias Bethge) and we continued working together on delivering tools for creating artworks within a few clicks. Visit deepart.io and try it out!
+   </description>
+    </item>
+    
+    <item>
+      <title>DeepArt - Neural style platform</title>
+      <link>/project/video-analysis/</link>
+      <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/project/video-analysis/</guid>
+      <description>Astonishing results from the original style transfer paper motivated me and Michał Warchoł to implement the first transfer platform and make it available to the public. After the prompt success we joined the forces with the authors of the orginal algorithm (Leon Gatys, Alexander Ecker and Mathias Bethge) and we continued working together on delivering tools for creating artworks within a few clicks. Visit deepart.io and try it out!
+   </description>
+    </item>
+    
+    <item>
+      <title>FreeBoost - MRI segmentation</title>
+      <link>/not-used/freeboost/</link>
+      <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/not-used/freeboost/</guid>
+      <description>Together with my Stanford colleagues (Ben Kotopka, Alexander Onopa and Owen Philips) we developped an MRI brain segmentation tool. Find out more on the project website.</description>
+    </item>
+    
+    <item>
+      <title>Golf swing analysis app</title>
+      <link>/not-used/kinemai/</link>
+      <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/not-used/kinemai/</guid>
+      <description>During Stanford Ignite progrem, together with my teammates we were evaluating commercial opportunities of applying AI for sport&amp;rsquo;s coaching. We prototyped a mobile app using pose estimation algorithms for improving golf swing performance.
+   </description>
+    </item>
+    
+    <item>
+      <title>Learning how to run (NIPS)</title>
+      <link>/project/l2r/</link>
+      <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/project/l2r/</guid>
+      <description>Human movement results from the intricate coordination of muscles, tendons, joints, and other physiological elements. While children learn to walk, run, climb, and jump in their first years of life and most of us can navigate complex environments&amp;ndash;like a crowded street or moving subway&amp;ndash;without considerable active attention, developing controllers that can efficiently and robustly synthesize realistic human motions in a variety of environments remains a grand challenge for biomechanists, neuroscientists, and computer scientists.</description>
+    </item>
+    
+    <item>
+      <title>Learning how to run (NIPS)</title>
+      <link>/project/nips-learning-to-run/</link>
+      <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/project/nips-learning-to-run/</guid>
+      <description>Human movement results from the intricate coordination of muscles, tendons, joints, and other physiological elements. While children learn to walk, run, climb, and jump in their first years of life and most of us can navigate complex environments&amp;ndash;like a crowded street or moving subway&amp;ndash;without considerable active attention, developing controllers that can efficiently and robustly synthesize realistic human motions in a variety of environments remains a grand challenge for biomechanists, neuroscientists, and computer scientists.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -23,6 +23,15 @@
     
     <url>
     
+      <loc>/publication/dfpca/</loc>
+      <lastmod>2018-11-01T00:00:00+00:00</lastmod>
+    </url>
+    
+  
+    
+    
+    <url>
+    
       <loc>/publication/periodically-correlated/</loc>
       <lastmod>2017-07-01T00:00:00+00:00</lastmod>
     </url>
@@ -95,7 +104,7 @@
     
     <url>
     
-      <loc>/project/freeboost/</loc>
+      <loc>/project/longitudinal-data/</loc>
       <lastmod>2016-04-27T00:00:00+00:00</lastmod>
     </url>
     
@@ -104,7 +113,7 @@
     
     <url>
     
-      <loc>/project/kinemai/</loc>
+      <loc>/project/video-analysis/</loc>
       <lastmod>2016-04-27T00:00:00+00:00</lastmod>
     </url>
     
@@ -113,7 +122,34 @@
     
     <url>
     
-      <loc>/project/deep-learning/</loc>
+      <loc>/not-used/freeboost/</loc>
+      <lastmod>2016-04-27T00:00:00+00:00</lastmod>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/not-used/kinemai/</loc>
+      <lastmod>2016-04-27T00:00:00+00:00</lastmod>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/project/l2r/</loc>
+      <lastmod>2016-04-27T00:00:00+00:00</lastmod>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/project/nips-learning-to-run/</loc>
       <lastmod>2016-04-27T00:00:00+00:00</lastmod>
     </url>
     
@@ -176,7 +212,7 @@
     
     <url>
     
-      <loc>/publication/dfpca/</loc>
+      <loc>/publication/fcomplete/</loc>
       <lastmod>2015-06-02T00:00:00+00:00</lastmod>
     </url>
     
@@ -241,7 +277,7 @@
     <url>
     
       <loc>/publication_types/2/</loc>
-      <lastmod>2017-07-01T00:00:00+00:00</lastmod>
+      <lastmod>2018-11-01T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     

@@ -8,7 +8,18 @@
     <language>en-us</language>
     <copyright>&amp;copy; 2017 Łukasz Kidziński</copyright>
     <lastBuildDate>Sun, 01 Jan 2017 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/publication/" rel="self" type="application/rss+xml" />
+    
+	<atom:link href="/publication/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Longitudinal data analysis using matrix completion</title>
+      <link>/publication/dfpca/</link>
+      <pubDate>Thu, 01 Nov 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/publication/dfpca/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Principal component analysis of periodically correlated functional time series</title>
@@ -16,8 +27,7 @@
       <pubDate>Sat, 01 Jul 2017 00:00:00 +0000</pubDate>
       
       <guid>/publication/periodically-correlated/</guid>
-      <description>&lt;!-- More detail can easily be written here using *Markdown* and $\rm \LaTeX$ math code. --&gt;
-</description>
+      <description></description>
     </item>
     
     <item>
@@ -26,8 +36,7 @@
       <pubDate>Fri, 02 Jun 2017 00:00:00 +0000</pubDate>
       
       <guid>/publication/orchestration/</guid>
-      <description>&lt;!-- More detail can easily be written here using *Markdown* and $\rm \LaTeX$ math code. --&gt;
-</description>
+      <description></description>
     </item>
     
     <item>
@@ -36,18 +45,16 @@
       <pubDate>Wed, 01 Jul 2015 00:00:00 +0000</pubDate>
       
       <guid>/publication/lagged-regression/</guid>
-      <description>&lt;!-- More detail can easily be written here using *Markdown* and $\rm \LaTeX$ math code. --&gt;
-</description>
+      <description></description>
     </item>
     
     <item>
       <title>Dynamic Functional Principal Component</title>
-      <link>/publication/dfpca/</link>
+      <link>/publication/fcomplete/</link>
       <pubDate>Tue, 02 Jun 2015 00:00:00 +0000</pubDate>
       
-      <guid>/publication/dfpca/</guid>
-      <description>&lt;!-- More detail can easily be written here using *Markdown* and $\rm \LaTeX$ math code. --&gt;
-</description>
+      <guid>/publication/fcomplete/</guid>
+      <description></description>
     </item>
     
     <item>
@@ -56,8 +63,7 @@
       <pubDate>Tue, 02 Jun 2015 00:00:00 +0000</pubDate>
       
       <guid>/publication/how-do-video/</guid>
-      <description>&lt;!-- More detail can easily be written here using *Markdown* and $\rm \LaTeX$ math code. --&gt;
-</description>
+      <description></description>
     </item>
     
     <item>
@@ -66,8 +72,7 @@
       <pubDate>Tue, 02 Jun 2015 00:00:00 +0000</pubDate>
       
       <guid>/publication/moocs-what-tell/</guid>
-      <description>&lt;!-- More detail can easily be written here using *Markdown* and $\rm \LaTeX$ math code. --&gt;
-</description>
+      <description></description>
     </item>
     
     <item>
@@ -76,8 +81,7 @@
       <pubDate>Tue, 02 Jun 2015 00:00:00 +0000</pubDate>
       
       <guid>/publication/head/</guid>
-      <description>&lt;!-- More detail can easily be written here using *Markdown* and $\rm \LaTeX$ math code. --&gt;
-</description>
+      <description></description>
     </item>
     
     <item>
@@ -86,8 +90,7 @@
       <pubDate>Sun, 01 Mar 2015 00:00:00 +0000</pubDate>
       
       <guid>/publication/hilbertian-linear/</guid>
-      <description>&lt;!-- More detail can easily be written here using *Markdown* and $\rm \LaTeX$ math code. --&gt;
-</description>
+      <description></description>
     </item>
     
   </channel>
