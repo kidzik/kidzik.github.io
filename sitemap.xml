@@ -23,8 +23,53 @@
     
     <url>
     
-      <loc>/publication/dfpca/</loc>
-      <lastmod>2018-11-01T00:00:00+00:00</lastmod>
+      <loc>/publication/fcomplete/</loc>
+      <lastmod>2018-11-15T00:00:00+00:00</lastmod>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/project/longitudinal-data/</loc>
+      <lastmod>2018-11-15T00:00:00+00:00</lastmod>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/publication/dysgraphia/</loc>
+      <lastmod>2018-11-05T00:00:00+00:00</lastmod>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/publication/effect-size/</loc>
+      <lastmod>2018-11-05T00:00:00+00:00</lastmod>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/project/healthai/</loc>
+      <lastmod>2018-06-01T00:00:00+00:00</lastmod>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/project/video-analysis/</loc>
+      <lastmod>2017-10-01T00:00:00+00:00</lastmod>
     </url>
     
   
@@ -104,24 +149,6 @@
     
     <url>
     
-      <loc>/project/longitudinal-data/</loc>
-      <lastmod>2016-04-27T00:00:00+00:00</lastmod>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>/project/video-analysis/</loc>
-      <lastmod>2016-04-27T00:00:00+00:00</lastmod>
-    </url>
-    
-  
-    
-    
-    <url>
-    
       <loc>/not-used/freeboost/</loc>
       <lastmod>2016-04-27T00:00:00+00:00</lastmod>
     </url>
@@ -132,15 +159,6 @@
     <url>
     
       <loc>/not-used/kinemai/</loc>
-      <lastmod>2016-04-27T00:00:00+00:00</lastmod>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>/project/l2r/</loc>
       <lastmod>2016-04-27T00:00:00+00:00</lastmod>
     </url>
     
@@ -212,7 +230,7 @@
     
     <url>
     
-      <loc>/publication/fcomplete/</loc>
+      <loc>/publication/dfpca/</loc>
       <lastmod>2015-06-02T00:00:00+00:00</lastmod>
     </url>
     
@@ -277,7 +295,7 @@
     <url>
     
       <loc>/publication_types/2/</loc>
-      <lastmod>2018-11-01T00:00:00+00:00</lastmod>
+      <lastmod>2018-11-15T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -306,7 +324,7 @@
     <url>
     
       <loc>/tags/computer-vision/</loc>
-      <lastmod>2016-04-27T00:00:00+00:00</lastmod>
+      <lastmod>2017-10-01T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -316,7 +334,7 @@
     <url>
     
       <loc>/tags/deep-learning/</loc>
-      <lastmod>2016-04-27T00:00:00+00:00</lastmod>
+      <lastmod>2018-06-01T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -345,6 +363,26 @@
     
     <url>
     
+      <loc>/tags/longitudinal-data/</loc>
+      <lastmod>2018-11-15T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/tags/medicine/</loc>
+      <lastmod>2018-06-01T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
       <loc>/not-used/</loc>
       <lastmod>2016-04-20T00:00:00+00:00</lastmod>
       <priority>0</priority>
@@ -356,7 +394,7 @@
     <url>
     
       <loc>/project/</loc>
-      <lastmod>2016-04-27T00:00:00+00:00</lastmod>
+      <lastmod>2018-11-15T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -377,6 +415,16 @@
     
       <loc>/tags/reinforcement-learning/</loc>
       <lastmod>2016-04-27T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/tags/statistics/</loc>
+      <lastmod>2018-11-15T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     

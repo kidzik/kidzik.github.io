@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Medicine on Łukasz Kidziński</title>
+    <link>/tags/medicine/</link>
+    <description>Recent content in Medicine on Łukasz Kidziński</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2017 Łukasz Kidziński</copyright>
+    <lastBuildDate>Fri, 01 Jun 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/medicine/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>HealthAI working group</title>
+      <link>/project/healthai/</link>
+      <pubDate>Fri, 01 Jun 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/project/healthai/</guid>
+      <description>Bringing together experts from Schools of Medicine, Engineering, and Business at Stanford to tackle medical problems at scale using state-of-the-art AI methods. Three main
+ Problems &amp;amp; solutions: Find out what problems are researchers facing in medical fields. See new methods from CS researchers. group Hackathons: Once we see some matches between problems and techniques we can approach them with quick &amp;lsquo;fail-fast&amp;rsquo; sessions. settings
+ Lectures &amp;amp; workshops: Learn new methods and tools applicable in your research from faculty, visiting professors and students.</description>
+    </item>
+    
+  </channel>
+</rss>

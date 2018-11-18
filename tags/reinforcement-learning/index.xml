@@ -14,20 +14,14 @@
     
     <item>
       <title>Learning how to run (NIPS)</title>
-      <link>/project/l2r/</link>
-      <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
-      
-      <guid>/project/l2r/</guid>
-      <description>Human movement results from the intricate coordination of muscles, tendons, joints, and other physiological elements. While children learn to walk, run, climb, and jump in their first years of life and most of us can navigate complex environments&amp;ndash;like a crowded street or moving subway&amp;ndash;without considerable active attention, developing controllers that can efficiently and robustly synthesize realistic human motions in a variety of environments remains a grand challenge for biomechanists, neuroscientists, and computer scientists.</description>
-    </item>
-    
-    <item>
-      <title>Learning how to run (NIPS)</title>
       <link>/project/nips-learning-to-run/</link>
       <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
       
       <guid>/project/nips-learning-to-run/</guid>
-      <description>Human movement results from the intricate coordination of muscles, tendons, joints, and other physiological elements. While children learn to walk, run, climb, and jump in their first years of life and most of us can navigate complex environments&amp;ndash;like a crowded street or moving subway&amp;ndash;without considerable active attention, developing controllers that can efficiently and robustly synthesize realistic human motions in a variety of environments remains a grand challenge for biomechanists, neuroscientists, and computer scientists.</description>
+      <description>Use my musculoskeletal reinforcement learning environment for other projects in computer science, neuroscience, biomechanics, etc.
+We set up a competition to build models of the brain in the crowdAI. Competition was accepted as one of the 5 official competitions at NIPS 2017 and one of 8 competitions at NIPS 2018, attracting over 500 teams from all over the world.
+Here are some solutions from the first challenge
+   You can find the code on the official website.</description>
     </item>
     
   </channel>
