@@ -23,6 +23,24 @@
     
     <url>
     
+      <loc>/project/street-view/</loc>
+      <lastmod>2019-05-01T00:00:00+00:00</lastmod>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/publication/street-view/</loc>
+      <lastmod>2018-11-15T00:00:00+00:00</lastmod>
+    </url>
+    
+  
+    
+    
+    <url>
+    
       <loc>/publication/fcomplete/</loc>
       <lastmod>2018-11-15T00:00:00+00:00</lastmod>
     </url>
@@ -334,7 +352,7 @@
     <url>
     
       <loc>/tags/deep-learning/</loc>
-      <lastmod>2018-06-01T00:00:00+00:00</lastmod>
+      <lastmod>2019-05-01T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -374,7 +392,7 @@
     <url>
     
       <loc>/tags/medicine/</loc>
-      <lastmod>2018-06-01T00:00:00+00:00</lastmod>
+      <lastmod>2019-05-01T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -394,7 +412,7 @@
     <url>
     
       <loc>/project/</loc>
-      <lastmod>2018-11-15T00:00:00+00:00</lastmod>
+      <lastmod>2019-05-01T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     

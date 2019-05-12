@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2017 Łukasz Kidziński</copyright>
-    <lastBuildDate>Thu, 15 Nov 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 01 May 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/project/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Street view accident risk</title>
+      <link>/project/street-view/</link>
+      <pubDate>Wed, 01 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/project/street-view/</guid>
+      <description>Road traffic injuries are a leading cause of death worldwide. Proper estimation of car accident risk is critical for appropriate allocation of resources in healthcare, insurance, civil engineering, and other industries. We show how images of houses are predictive of car accidents. We analyze 20,000 addresses of insurance company clients, collect a corresponding house image using Google Street View, and annotate house features such as age, type, and condition. We find that this information substantially improves car accident risk prediction compared to the state-of-the-art risk model of the insurance company and could be used for price discrimination.</description>
+    </item>
     
     <item>
       <title>fcomplete</title>
@@ -19,7 +28,6 @@
       
       <guid>/project/longitudinal-data/</guid>
       <description>Suppose we observe N subjects, each subject at multiple timepoints and we want to estimate a trajectory of progression of measurements in individual subjects. For example, suppose you observe BMI of N children at different ages, as presented below
-
 Here, the connected dots come from individual subjects and the black thick line corresponds to the population mean.
 I&amp;rsquo;ve build the package to fit trajectories using matrix completion and I described the methodology in my recent paper Kidziński, Hastie (2018).</description>
     </item>
