@@ -18,12 +18,12 @@
       <pubDate>Sun, 15 Oct 2017 00:00:00 -0700</pubDate>
       
       <guid>/home/hero/</guid>
-      <description>Designing new machine learning tools for high-dimensional time series and longitudinal data. Applying deep reinforcement learning and computer vision in biomechanics. A co-founder of DeepArt - the neural style transfer company. Constantly looking for new opportunities and challenges 🚀  Latest release  
-(function defer() { if (window.jQuery) { jQuery(document).ready(function(){ GetLatestReleaseInfo(); }); } else { setTimeout(function() { defer() }, 50); } })(); function GetLatestReleaseInfo() { $.getJSON(&#39;https://api.github.com/repos/gcushen/hugo-academic/tags&#39;).done(function (json) { let release = json[0]; // let downloadURL = release.</description>
+      <description>Automating processes in medical imaging using deep learning at Saliency.ai.  Latest release  
+(function defer() { if (window.jQuery) { jQuery(document).ready(function(){ GetLatestReleaseInfo(); }); } else { setTimeout(function() { defer() }, 50); } })(); function GetLatestReleaseInfo() { $.getJSON(&#39;https://api.github.com/repos/gcushen/hugo-academic/tags&#39;).done(function (json) { let release = json[0]; // let downloadURL = release.zipball_url; $(&#39;#academic-release&#39;).text(&#39;Latest release &#39;); }); }  </description>
     </item>
     
     <item>
-      <title>Recent projects</title>
+      <title>Past academic projects</title>
       <link>/home/projects/</link>
       <pubDate>Wed, 20 Apr 2016 00:00:00 +0000</pubDate>
       
@@ -46,8 +46,8 @@
       <pubDate>Wed, 20 Apr 2016 00:00:00 +0000</pubDate>
       
       <guid>/home/about/</guid>
-      <description>Biography Łukasz Kidziński is a researcher in the Mobilize Center at Stanford, working on the intersection of computer science, statistics, and biomechanics. Previously a researcher in the CHILI group, Computer-Human Interaction in Learning and Instruction, at the EPFL.
-He obtain his Ph.D. training at Université Libre de Bruxelles in mathematical statistics, working on time series analysis and functional data. He obtained two master degrees, in mathematics and in computer science, from the University of Warsaw.</description>
+      <description>Biography Łukasz Kidziński is a co-founder of Saliency.ai, a medical imaging platform, and a researcher in the Mobilize Center at Stanford, working on the intersection of computer science, statistics, and biomechanics. Previously a researcher in the CHILI group, Computer-Human Interaction in Learning and Instruction, at the EPFL.
+He obtain his Ph.D. at Université Libre de Bruxelles in mathematical statistics, working on time series analysis and functional data. He obtained two master degrees, in mathematics and in computer science, from the University of Warsaw.</description>
     </item>
     
     <item>
