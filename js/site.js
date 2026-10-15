@@ -1,3 +1,18 @@
+// Decode contact details only after an explicit request to reveal them.
+document.querySelectorAll('[data-email]').forEach(button => {
+  button.addEventListener('click', () => {
+    const address = atob(button.dataset.email);
+    const link = document.createElement('a');
+    link.className = 'contact-email';
+    link.href = `mailto:${address}`;
+    link.textContent = address;
+    button.replaceWith(link);
+    link.focus();
+  });
+  button.hidden = false;
+  button.parentElement.querySelector('.email-fallback').hidden = true;
+});
+
 const search = document.querySelector('#publication-search');
 if (search) {
   const rows = [...document.querySelectorAll('[data-publication]')];
