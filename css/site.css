@@ -74,6 +74,8 @@ summary { cursor: pointer; width: fit-content; }
 .publication-row h3 a { color: var(--ink); text-decoration: none; }
 .publication-row h3 a:hover { text-decoration: underline; }
 .publication-authors { color: var(--muted); font-size: 12px; line-height: 1.7; margin-top: 6px; }
+.publication-authors summary { width: auto; }
+details.publication-authors p { margin-top: 6px; }
 .publication-venue { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; margin-top: 6px; }
 .journal-logo { width: 22px; height: 22px; flex: none; object-fit: contain; }
 .journal-logo--wordmark { width: 56px; }
