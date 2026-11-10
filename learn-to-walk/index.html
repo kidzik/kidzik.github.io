@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Learn to walk · Lukas Kidzinski</title>
+  <meta name="description" content="Explore a learned walking controller in a live 700-muscle simulation.">
+  <link rel="stylesheet" href="./viewer.css">
+  <script type="importmap">{"imports":{"three":"./vendor/three.module.min.js"}}</script>
+  <script type="module" src="./viewer.js"></script>
+</head>
+<body>
+  <main>
+    <nav><a href="https://kidzinski.com/">Lukas Kidzinski</a><a href="https://kidzinski.com/project/">Research</a></nav>
+    <header>
+      <h1>Learn to walk</h1>
+      <p>Explore how a learned controller activates 700 simulated muscles to walk.</p>
+    </header>
+    <section class="viewer" aria-label="Interactive walking model">
+      <div class="stage" id="stage">
+        <div class="stage-label" id="run-status" role="status">Loading anatomy…</div>
+        <div class="start" id="start-panel" hidden>
+          <button id="start">Start simulation</button>
+          <small id="start-note">Runs on this device · about 160–180 MB to load</small>
+        </div>
+        <div class="stage-controls">
+          <button id="pause" disabled>Pause</button>
+          <button id="reset-walk" disabled>Reset walk</button>
+          <button id="push" disabled>Push sideways</button>
+        </div>
+      </div>
+      <div class="toolbar">
+        <div class="view-controls" aria-label="Camera views">
+          <button data-view="front">Front</button>
+          <button data-view="side">Side</button>
+          <button data-view="back">Back</button>
+        </div>
+        <div class="display-controls">
+          <label><input type="checkbox" id="muscles" checked> Muscles</label>
+          <label><input type="checkbox" id="activation" checked> Activation</label>
+        </div>
+      </div>
+    </section>
+    <div class="under-viewer">
+      <p>Drag to orbit · Scroll or pinch to zoom</p>
+      <div class="legend"><span></span><p>Low to high activation</p></div>
+    </div>
+    <dl class="metrics">
+      <div><dt>Average speed</dt><dd id="speed">—</dd></div>
+      <div><dt>Walk time</dt><dd id="duration">—</dd></div>
+      <div><dt>Displacement</dt><dd id="distance">—</dd></div>
+    </dl>
+    <p class="status-note" id="status-note" role="status"></p>
+    <footer>
+      <p>Noncommercial research demo · <a href="./SOURCES.md">Sources and licenses</a></p>
+      <p>Simulation uses <a href="https://github.com/LNSGroup/MS-Human-700">MS-Human-700</a>. Anatomy uses adapted BodyParts3D surfaces, © The Database Center for Life Science, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p>
+      <p>Colors show average activation in <span id="coverage">matched</span> muscle paths. Brown surfaces have no mapped activation.</p>
+    </footer>
+  </main>
+</body>
+</html>
