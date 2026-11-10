@@ -1,4 +1,4 @@
-import { compressedBuffer, WalkingSimulation } from './simulation.js';
+import { compressedBuffer, WalkingSimulation } from './simulation.js?v=2';
 
 let simulation;
 let paused = true;
@@ -6,7 +6,6 @@ let scheduled = false;
 let pendingReset = false;
 let pendingPush = false;
 let deadline = 0;
-let resumeAt = 0;
 let averageMs = 0;
 
 async function checked(name) {
@@ -17,7 +16,7 @@ async function checked(name) {
 
 async function initialize(preferredBackend) {
   postMessage({ type: 'progress', text: 'Loading the walking policy and physics…' });
-  const manifest = await checked('manifest.json').then(response => response.json());
+  const manifest = await checked('manifest.json?v=2').then(response => response.json());
   const loadActor = async () => {
     const weights = new Uint8Array(manifest.actorParts.reduce((sum, [, length]) => sum + length, 0));
     let offset = 0;
@@ -43,8 +42,7 @@ async function initialize(preferredBackend) {
     try {
       simulation = await WalkingSimulation.create({ ...assets, backend: 'webgpu' });
       // Some providers fail on the first execution rather than session creation.
-      await simulation.step();
-      simulation.reset();
+      await simulation.meanAction();
     } catch {
       if (simulation) {
         await simulation.actor.release();
@@ -77,7 +75,7 @@ function schedule(delay = 0) {
 async function tick() {
   try {
     const now = performance.now();
-    if (pendingReset || (!paused && simulation.done && now >= resumeAt)) {
+    if (pendingReset) {
       simulation.reset();
       pendingReset = false;
       pendingPush = false;
@@ -95,16 +93,14 @@ async function tick() {
     const duration = performance.now() - start;
     averageMs = averageMs ? .92*averageMs + .08*duration : duration;
     if (simulation.frame % 2 === 0 || simulation.done) publish();
-    if (simulation.done) resumeAt = performance.now() + 1000;
     deadline = Math.max(deadline + 1000*simulation.manifest.dt, performance.now()-30);
   } catch (error) {
     paused = true;
     postMessage({ type: 'error', message: error.message });
   } finally {
     scheduled = false;
-    if (pendingReset || !paused) {
-      const next = simulation.done ? resumeAt : deadline;
-      schedule(pendingReset ? 0 : Math.max(0, next-performance.now()));
+    if (pendingReset || (!paused && !simulation.done)) {
+      schedule(pendingReset ? 0 : Math.max(0, deadline-performance.now()));
     }
   }
 }

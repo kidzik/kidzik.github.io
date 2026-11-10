@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from './vendor/OrbitControls.js';
-import { compressedBuffer } from './simulation.js';
+import { compressedBuffer } from './simulation.js?v=2';
 
 const byId = id => document.getElementById(id);
 const stage = byId('stage');
@@ -235,7 +235,9 @@ async function createViewer() {
 function connect(setSnapshot) {
   const start = byId('start');
   const pause = byId('pause');
-  const controls = [pause, byId('reset-walk'), byId('push')];
+  const reset = byId('reset-walk');
+  const push = byId('push');
+  const controls = [pause, reset, push];
   let worker;
   let paused = false;
   let checkpoint;
@@ -259,7 +261,7 @@ function connect(setSnapshot) {
     start.disabled = true;
     start.textContent = 'Loading simulation…';
     note.textContent = '';
-    worker = new Worker(new URL('physics-worker.js', import.meta.url), { type: 'module' });
+    worker = new Worker(new URL('physics-worker.js?v=2', import.meta.url), { type: 'module' });
     worker.onerror = event => fail(event.message || 'The physics worker stopped unexpectedly.');
     worker.onmessage = ({ data }) => {
       if (data.type === 'progress') status.textContent = data.text;
@@ -279,8 +281,11 @@ function connect(setSnapshot) {
         byId('speed').textContent = `${speed.toFixed(2)} m/s`;
         byId('duration').textContent = `${data.seconds.toFixed(2)} s`;
         byId('distance').textContent = `${data.distance.toFixed(2)} m`;
+        pause.disabled = push.disabled = !!data.done;
+        const runStatus = data.done ? `${data.done} · click Reset walk`
+          : paused ? 'Paused on this device' : 'Running on this device';
+        if (status.textContent !== runStatus) status.textContent = runStatus;
         if (data.done || performance.now()-lastStatus > 500) {
-          if (!paused) status.textContent = data.done ? `${data.done} · restarting` : 'Running on this device';
           note.textContent = `${backend} inference · ${Number(checkpoint).toLocaleString()} training steps`
             + (data.stepMs > 0 ? ` · ${data.stepMs.toFixed(1)} ms per control update` : '');
           lastStatus = performance.now();
@@ -296,8 +301,8 @@ function connect(setSnapshot) {
     status.textContent = paused ? 'Paused on this device' : 'Running on this device';
     worker?.postMessage({ type: 'pause', paused });
   });
-  byId('reset-walk').addEventListener('click', () => worker?.postMessage({ type: 'reset' }));
-  byId('push').addEventListener('click', () => worker?.postMessage({ type: 'push' }));
+  reset.addEventListener('click', () => worker?.postMessage({ type: 'reset' }));
+  push.addEventListener('click', () => worker?.postMessage({ type: 'push' }));
 }
 
 createViewer().then(setSnapshot => {

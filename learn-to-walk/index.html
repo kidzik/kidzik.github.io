@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Learn to walk · Lukas Kidzinski</title>
   <meta name="description" content="Explore a learned walking controller in a live 700-muscle simulation.">
-  <link rel="stylesheet" href="./viewer.css">
+  <link rel="stylesheet" href="./viewer.css?v=2">
   <script type="importmap">{"imports":{"three":"./vendor/three.module.min.js"}}</script>
-  <script type="module" src="./viewer.js"></script>
+  <script type="module" src="./viewer.js?v=2"></script>
 </head>
 <body>
   <main>
@@ -51,6 +51,45 @@
       <div><dt>Displacement</dt><dd id="distance">—</dd></div>
     </dl>
     <p class="status-note" id="status-note" role="status"></p>
+    <section class="explainer" aria-labelledby="walk-heading">
+      <div class="explainer-intro">
+        <h2 id="walk-heading">What does it take to walk?</h2>
+        <p>Every step moves your weight onto one leg while the other swings forward. The muscles that push you off the ground also have to keep you upright. This experiment asks whether a neural network can learn that coordination in a simulated human body.</p>
+      </div>
+
+      <figure class="control-loop">
+        <figcaption>
+          <h3>Inside the controller</h3>
+          <p>The controller is a neural network, also called a policy. It makes a new decision every 20 milliseconds of simulated time.</p>
+        </figcaption>
+        <ol>
+          <li><strong>Read the body</strong><span>Joint angles, movement, muscle state and foot contact, plus a preview of the target stride.</span></li>
+          <li><strong>Send muscle commands</strong><span>The network gives each of the 700 muscle actuators a command between zero and one.</span></li>
+          <li><strong>Advance the simulation</strong><span>MuJoCo computes muscle forces, gravity and ground contact to update the body.</span></li>
+        </ol>
+        <p class="feedback"><span aria-hidden="true">↶</span> The updated body state feeds back into the next decision.</p>
+      </figure>
+
+      <div class="explainer-stories">
+        <article>
+          <h3>How it learned</h3>
+          <p>We fitted a stride from human motion capture to this body. During training, the controller tried muscle commands across many parallel simulations and earned higher rewards when the resulting motion tracked the target. PPO, a reinforcement learning algorithm, used those rewards to reinforce choices that helped across several steps.</p>
+        </article>
+        <article>
+          <h3>Why learn muscle control?</h3>
+          <p>Many combinations of muscles can produce a similar step. Training in physics lets us explore those combinations while the body has to bear weight, push off and balance. A controller that responds to the current state also gives us a way to test how a gait holds up when the body is disturbed.</p>
+        </article>
+      </div>
+      <aside class="try-walking">
+        <h3>Try a sideways push</h3>
+        <p>Watch what changes if you push while one foot is off the ground. Darker red shows higher activation in the displayed muscles. If the model falls, press <strong>Reset walk</strong> to try again.</p>
+      </aside>
+      <ul class="reading" aria-label="Research behind the demo">
+        <li><a href="https://www.nature.com/articles/s41597-025-05391-0">Gait120 motion capture</a></li>
+        <li><a href="https://github.com/amathislab/MuscleMimic">MuscleMimic training framework</a></li>
+        <li><a href="https://arxiv.org/abs/1707.06347">PPO paper</a></li>
+      </ul>
+    </section>
     <footer>
       <p>Noncommercial research demo · <a href="./SOURCES.md">Sources and licenses</a></p>
       <p>Simulation uses <a href="https://github.com/LNSGroup/MS-Human-700">MS-Human-700</a>. Anatomy uses adapted BodyParts3D surfaces, © The Database Center for Life Science, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p>

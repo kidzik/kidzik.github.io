@@ -136,8 +136,9 @@ export class WalkingSimulation {
   }
 
   reference(frame = this.frame) {
-    const { referenceFrames, referenceStride } = this.manifest;
-    const start = Math.min(frame, referenceFrames-1) * referenceStride;
+    const { referenceLoop: [loopStart, loopEnd], referenceStride } = this.manifest;
+    const index = frame < loopEnd ? frame : loopStart + (frame-loopEnd) % (loopEnd-loopStart);
+    const start = index * referenceStride;
     return this.references.subarray(start, start + referenceStride);
   }
 
@@ -167,7 +168,7 @@ export class WalkingSimulation {
     const t0 = performance.now();
     const mean = await this.meanAction();
     const t1 = performance.now();
-    const noise = this.noiseOffset + this.frame * mean.length;
+    const noise = this.noiseOffset + (this.frame % manifest.referenceFrames) * mean.length;
     const ctrl = data.ctrl;
     for (let i = 0; i < mean.length; i++) {
       const action = mean[i] + manifest.actionStd[i] * this.references[noise+i];
@@ -185,38 +186,13 @@ export class WalkingSimulation {
 
   endReason() {
     const { data, manifest } = this;
-    const { qpos, qvel, act, site_xpos: sites } = data;
+    const { qpos, qvel, act } = data;
     const t = manifest.terminal;
     const finite = qpos.every(Number.isFinite) && qvel.every(Number.isFinite) && act.every(Number.isFinite);
     if (!finite || Math.abs(data.time - this.frame*manifest.dt) > 1e-5) return 'Numerical failure';
     const upright = 1 - 2*(qpos[4]**2 + qpos[5]**2);
     if (qpos[2] < t.fall_min_height_m || upright < t.fall_min_upright) return 'Fall';
-    for (let i = 6; i < qvel.length; i++) {
-      if (Math.abs(qvel[i]) > t.maximum_joint_speed_rad_s) return 'Joint speed limit';
-    }
-    const r = this.reference();
-    const start = manifest.observation.referenceSize;
-    const ids = manifest.observation.sites;
-    const root = 3*ids[0];
-    const deviation = Math.hypot(sites[root]-r[start], sites[root+1]-r[start+1], sites[root+2]-r[start+2]);
-    if (deviation > t.root_deviation_threshold) return 'Reference drift';
-    let dot = 0, norm = 0, referenceNorm = 0;
-    for (let i = 0; i < 4; i++) {
-      dot += qpos[3+i]*r[start+3+i];
-      norm += qpos[3+i]**2;
-      referenceNorm += r[start+3+i]**2;
-    }
-    if (2*Math.acos(Math.min(1, Math.abs(dot) / Math.sqrt(norm*referenceNorm))) > t.root_orientation_threshold) {
-      return 'Heading deviation';
-    }
-    let error = 0;
-    for (let i = 1; i < ids.length; i++) {
-      const p = 3*ids[i], a = start+7+3*(i-1);
-      error += Math.hypot(sites[p]-sites[root]-r[a], sites[p+1]-sites[root+1]-r[a+1],
-        sites[p+2]-sites[root+2]-r[a+2]);
-    }
-    if (error/(ids.length-1) > t.mean_site_deviation_threshold) return 'Pose deviation';
-    return this.frame >= Math.min(manifest.horizon, manifest.referenceFrames-1) ? 'Reference complete' : null;
+    return null;
   }
 
   snapshot() {
