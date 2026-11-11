@@ -132,6 +132,18 @@ figcaption { margin: 8px 0 0; }
 .applications li { min-width: 0; }
 .applications img { display: block; width: 100%; height: auto; border-radius: 5px; }
 .applications h3 { margin-top: 10px; }
+.resource-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; list-style: none; padding: 0; margin: 0; }
+.resource-link { position: relative; display: grid; align-content: start; gap: 10px; height: 100%; padding: 15px 16px 16px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); text-decoration: none; }
+.resource-link:hover { border-color: #b79587; color: var(--ink); }
+.resource-link:hover h3, .resource-link:focus-visible h3 { text-decoration: underline; text-underline-offset: .18em; }
+.resource-mark { display: block; background: #f2ebe0; border-radius: 5px; }
+.resource-type { display: block; margin-bottom: 3px; color: var(--muted); font-size: .74rem; }
+.resource-copy p { margin-top: 5px; color: var(--muted); font-size: .84rem; }
+.resource-arrow { position: absolute; right: 13px; top: 10px; color: var(--rust); font-size: .95rem; }
+.resource-notes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 18px 0 0; padding: 12px 0 0; border-top: 1px solid var(--line); font-size: .84rem; }
+.resource-notes dt { color: var(--muted); font-size: .74rem; }
+.resource-notes dd { margin: 2px 0 0; }
+.resource-notes a { white-space: nowrap; }
 .walk-credits { margin: 44px 0 0; padding: 11px 0 25px; border-top: 1px solid var(--line); color: var(--muted); font-size: .8rem; }
 .walk-credits p { margin: 7px 0 0; }
 
@@ -143,6 +155,7 @@ figcaption { margin: 8px 0 0; }
   .ankle-figure { max-width: 480px; }
   .applications { gap: 24px; }
   .applications img { max-width: 440px; }
+  .resource-list, .resource-notes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 540px) {
   .loop-buttons { grid-template-columns: minmax(0, 1fr); gap: 19px; }
@@ -155,6 +168,8 @@ figcaption { margin: 8px 0 0; }
   .loop-feedback::before { display: none; }
   .loop-feedback > span { margin: 0; padding: 0; }
   #loop-detail { margin-top: 7px; min-height: 4.9em; }
+  .resource-list { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .resource-link { grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: 12px; padding: 11px 32px 11px 11px; }
 }
 @media (max-width: 360px) {
   .under-viewer { gap: 0 12px; }

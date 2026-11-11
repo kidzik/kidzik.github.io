@@ -9,7 +9,7 @@
   <link rel="canonical" href="https://kidzinski.com/learn-to-walk/">
   <link rel="icon" href="../favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../css/site.css?v=2">
-  <link rel="stylesheet" href="./motion-lab.css?v=5">
+  <link rel="stylesheet" href="./motion-lab.css?v=6">
   <script type="importmap">{"imports":{"three":"./vendor/three.module.min.js"}}</script>
   <script type="module" src="./viewer.js?v=4"></script>
   <script type="module" src="./motion-lab.js?v=3"></script>
@@ -85,6 +85,7 @@
       <a href="#training">How it learns</a>
       <a href="#replay">Push experiment</a>
       <a href="#research">Applications</a>
+      <a href="#resources">Resources</a>
     </nav>
 
     <section class="chapter" id="muscle-mechanics" aria-labelledby="muscles-heading">
@@ -206,9 +207,88 @@
       <p class="reading-note">This demo shows one model on level ground. Testing human predictions would require independent measurements such as motion capture, ground reaction forces and EMG.</p>
     </section>
 
+    <section class="chapter resources" id="resources" aria-labelledby="resources-heading">
+      <h2 id="resources-heading">Resources behind the demo</h2>
+      <p class="lede">Follow the tools, data, and research that make the walker possible.</p>
+      <ul class="resource-list" role="list">
+        <li>
+          <a class="resource-link" href="https://mujoco.org/">
+            <svg class="resource-mark" viewBox="0 0 64 64" width="56" height="56" aria-hidden="true" focusable="false"><use href="./explainer/resource-icons.svg#physics"></use></svg>
+            <div class="resource-copy">
+              <span class="resource-type">Physics engine</span>
+              <h3>MuJoCo</h3>
+              <p>Computes muscle forces, gravity, and contact with the ground.</p>
+            </div>
+            <span class="resource-arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+        <li>
+          <a class="resource-link" href="https://github.com/LNSGroup/MS-Human-700">
+            <svg class="resource-mark" viewBox="0 0 64 64" width="56" height="56" aria-hidden="true" focusable="false"><use href="./explainer/resource-icons.svg#body"></use></svg>
+            <div class="resource-copy">
+              <span class="resource-type">Musculoskeletal model</span>
+              <h3>MS-Human-700</h3>
+              <p>Provides the simulated body and its 700 muscle actuators.</p>
+            </div>
+            <span class="resource-arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+        <li>
+          <a class="resource-link" href="https://github.com/amathislab/MuscleMimic">
+            <svg class="resource-mark" viewBox="0 0 64 64" width="56" height="56" aria-hidden="true" focusable="false"><use href="./explainer/resource-icons.svg#policy"></use></svg>
+            <div class="resource-copy">
+              <span class="resource-type">Training framework</span>
+              <h3>MuscleMimic</h3>
+              <p>Provides the training code we adapted to learn the walking controller.</p>
+            </div>
+            <span class="resource-arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+        <li>
+          <a class="resource-link" href="https://springernature.figshare.com/articles/dataset/Comprehensive_Human_Locomotion_and_Electromyography_Dataset_Gait120/27677016">
+            <svg class="resource-mark" viewBox="0 0 64 64" width="56" height="56" aria-hidden="true" focusable="false"><use href="./explainer/resource-icons.svg#capture"></use></svg>
+            <div class="resource-copy">
+              <span class="resource-type">Motion capture</span>
+              <h3>Gait120</h3>
+              <p>Supplies the human walking recordings used to fit the reference stride.</p>
+            </div>
+            <span class="resource-arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+        <li>
+          <a class="resource-link" href="https://dbarchive.biosciencedbc.jp/en/bodyparts3d/desc.html">
+            <svg class="resource-mark" viewBox="0 0 64 64" width="56" height="56" aria-hidden="true" focusable="false"><use href="./explainer/resource-icons.svg#anatomy"></use></svg>
+            <div class="resource-copy">
+              <span class="resource-type">Anatomy atlas</span>
+              <h3>BodyParts3D</h3>
+              <p>Supplies the bone and muscle surfaces fitted to the simulated body.</p>
+            </div>
+            <span class="resource-arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+        <li>
+          <a class="resource-link" href="https://onnxruntime.ai/docs/get-started/with-javascript/web.html">
+            <svg class="resource-mark" viewBox="0 0 64 64" width="56" height="56" aria-hidden="true" focusable="false"><use href="./explainer/resource-icons.svg#browser"></use></svg>
+            <div class="resource-copy">
+              <span class="resource-type">On-device inference</span>
+              <h3>ONNX Runtime Web</h3>
+              <p>Runs the trained neural network in your browser.</p>
+            </div>
+            <span class="resource-arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+      </ul>
+      <dl class="resource-notes">
+        <div><dt>Browser graphics</dt><dd><a href="https://threejs.org/">Three.js</a></dd></div>
+        <div><dt>Training</dt><dd><a href="https://docs.jax.dev/">JAX</a> · <a href="https://arxiv.org/abs/1707.06347">PPO algorithm</a></dd></div>
+        <div><dt>Model lineage</dt><dd><a href="https://github.com/CEINMS-RT/UpperLimbModel#license">MoBL-ARMS</a></dd></div>
+        <div><dt>Related research</dt><dd><a href="https://link.springer.com/article/10.1186/s12984-021-00919-y">Song et al., 2021</a> · <a href="https://lnsgroup.cc/research/MS-Emulator/">MS-Emulator</a></dd></div>
+      </dl>
+    </section>
+
     <footer class="walk-credits">
       <p>Noncommercial research demo · <a href="./SOURCES.md">Sources and licenses</a></p>
-      <p>Simulation body: <a href="https://github.com/LNSGroup/MS-Human-700">MS-Human-700</a>. Anatomy adapted from BodyParts3D, © The Database Center for Life Science, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Activation is mapped for <span id="coverage">a subset of</span> modeled actuators.</p>
+      <p>Anatomy adapted from BodyParts3D, © The Database Center for Life Science, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Activation is mapped for <span id="coverage">a subset of</span> modeled actuators.</p>
     </footer>
   </main>
 </body>
