@@ -14,8 +14,8 @@ const signals = [
     description: 'Modeled activation averaged across 700 actuators. Muscle color in the replay shows local changes.'},
 ];
 const runs = [
-  {key: 'steady', label: 'No push', color: '#207669', dash: [5, 4]},
-  {key: 'push', label: 'Sideways push', color: '#a04427', dash: []},
+  {key: 'steady', label: 'No push', color: '#496664', dash: [5, 4]},
+  {key: 'push', label: 'Sideways push', color: '#973e30', dash: []},
 ];
 
 let condition = 'push';
@@ -66,7 +66,7 @@ function drawChart() {
   const x = t => left + (right - left) * t / duration;
   const y = v => bottom - (bottom - top) * (v - min) / (max - min);
   const pushStart = x(data.pushStartSeconds);
-  ctx.fillStyle = '#edd1b8';
+  ctx.fillStyle = '#edd6ca';
   ctx.fillRect(pushStart, top, x(data.pushStartSeconds + data.pushDurationSeconds) - pushStart, bottom - top);
   ctx.font = '11px system-ui, sans-serif';
   ctx.textBaseline = 'middle';
@@ -275,7 +275,7 @@ fetch('./media/walk-traces.json').then(response => {
 
 const loopDetails = {
   sense: 'The controller reads joint motion, muscle state and foot contact, alongside a short preview of the target stride.',
-  decide: 'A trained neural network turns that information into 700 muscle commands. Reinforcement learning improved the commands by rewarding walks that tracked the reference.',
+  decide: 'A trained neural network turns that information into 700 muscle commands. Each command tells one modeled actuator how strongly to excite the muscle.',
   move: 'MuJoCo computes how muscles, gravity and ground contact move the body. The next decision uses the resulting state.',
 };
 for (const button of document.querySelectorAll('[data-loop]')) {
