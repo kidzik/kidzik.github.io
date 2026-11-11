@@ -1,5 +1,6 @@
 const id = name => document.getElementById(name);
 const video = id('replay-video');
+const replayMedia = new URL(video.dataset.media || './media/', import.meta.url);
 const scrub = id('replay-scrub');
 const canvas = id('trace-chart');
 const ctx = canvas.getContext('2d');
@@ -180,7 +181,7 @@ async function loadClip(key) {
   playButton.disabled = true;
   if (!clipUrls.has(key)) {
     const file = key === 'push' ? 'walk-push.mp4' : 'walk-steady.mp4';
-    clipUrls.set(key, fetch('./media/' + file).then(response => {
+    clipUrls.set(key, fetch(new URL(file, replayMedia)).then(response => {
       if (!response.ok) throw Error('Video unavailable.');
       return response.blob();
     }).then(URL.createObjectURL).catch(error => {
@@ -261,7 +262,7 @@ canvas.addEventListener('pointerdown', event => {
   if (data) seek(clamp((event.clientX - box.left - 44) / (box.width - 58), 0, 1) * duration);
 });
 
-fetch('./media/walk-traces.json').then(response => {
+fetch(new URL('walk-traces.json', replayMedia)).then(response => {
   if (!response.ok) throw Error('Trace data could not be loaded.');
   return response.json();
 }).then(recording => {

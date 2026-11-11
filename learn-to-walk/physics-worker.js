@@ -9,15 +9,16 @@ let pendingPush = false;
 let deadline = 0;
 let averageMs = 0;
 
-async function checked(name) {
-  const response = await fetch(new URL(name, import.meta.url));
+async function checked(name, base = import.meta.url) {
+  const response = await fetch(new URL(name, base));
   if (!response.ok) throw new Error(`Could not load ${name} (HTTP ${response.status}).`);
   return response;
 }
 
-async function initialize(preferredBackend) {
+async function initialize(preferredBackend, bundleURL) {
+  const bundle = new URL(bundleURL || './', import.meta.url);
   postMessage({ type: 'progress', text: 'Preparing the download…' });
-  const manifest = await checked('manifest.json?v=3').then(response => response.json());
+  const manifest = await checked('manifest.json?v=3', bundle).then(response => response.json());
   const names = ['model.xml', 'physics.bin.gz', 'reference.bin.gz', ...manifest.actorParts.map(([name]) => name)];
   const total = names.every(name => Number.isSafeInteger(manifest.downloadBytes?.[name]))
     ? names.reduce((sum, name) => sum + manifest.downloadBytes[name], 0) : 0;
@@ -29,8 +30,8 @@ async function initialize(preferredBackend) {
     lastProgress = now;
     postMessage({ type: 'download', downloaded, total });
   }
-  async function download(name, gzip = false) {
-    const response = await checked(name);
+  async function download(name, gzip = false, base) {
+    const response = await checked(name, base);
     const measured = response.body.pipeThrough(new TransformStream({
       transform(chunk, controller) {
         downloaded += chunk.byteLength;
@@ -45,7 +46,7 @@ async function initialize(preferredBackend) {
     let offset = 0;
     // Stream each chunk into the final buffer. Keeping one chunk in flight limits memory on phones.
     for (const [name, length] of manifest.actorParts) {
-      const reader = (await download(name, true)).getReader();
+      const reader = (await download(name, true, bundle)).getReader();
       const end = offset + length;
       try {
         for (;;) {
@@ -148,7 +149,7 @@ async function tick() {
 self.onmessage = ({ data }) => {
   if (data.type === 'start' && !simulation && !loading) {
     loading = true;
-    initialize(data.backend).catch(error => postMessage({ type: 'error', message: error.message }));
+    initialize(data.backend, data.bundleURL).catch(error => postMessage({ type: 'error', message: error.message }));
   } else if (data.type === 'pause') {
     paused = data.paused;
     if (!paused) {

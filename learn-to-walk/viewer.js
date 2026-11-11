@@ -330,7 +330,7 @@ function connect(setSnapshot) {
     phase('Preparing the download…');
     note.textContent = '';
     try {
-      worker = new Worker(new URL('physics-worker.js?v=3', import.meta.url), { type: 'module' });
+      worker = new Worker(new URL('physics-worker.js?v=4', import.meta.url), { type: 'module' });
     } catch (error) {
       fail(error.message);
       return;
@@ -379,7 +379,8 @@ function connect(setSnapshot) {
       }
     };
     const requested = new URL(location.href).searchParams.get('backend');
-    worker.postMessage({ type: 'start', backend: requested || (touchDevice ? 'wasm' : null) });
+    const bundleURL = stage.dataset.policy ? new URL(stage.dataset.policy, import.meta.url).href : undefined;
+    worker.postMessage({ type: 'start', backend: requested || (touchDevice ? 'wasm' : null), bundleURL });
   });
 
   pause.addEventListener('click', () => {

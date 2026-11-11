@@ -9,10 +9,10 @@
   <link rel="canonical" href="https://kidzinski.com/learn-to-walk/">
   <link rel="icon" href="../favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../css/site.css?v=2">
-  <link rel="stylesheet" href="./motion-lab.css?v=7">
+  <link rel="stylesheet" href="./motion-lab.css?v=8">
   <script type="importmap">{"imports":{"three":"./vendor/three.module.min.js"}}</script>
-  <script type="module" src="./viewer.js?v=4"></script>
-  <script type="module" src="./motion-lab.js?v=4"></script>
+  <script type="module" src="./viewer.js?v=5"></script>
+  <script type="module" src="./motion-lab.js?v=5"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -38,7 +38,7 @@
 
     <section id="live" aria-label="Live walking simulation">
       <div class="viewer" id="walking-viewer">
-        <div class="stage" id="stage" data-preview-pose="./media/preview-pose.json">
+        <div class="stage" id="stage" data-policy="./models/431841280/" data-preview-pose="./media/431841280/preview-pose.json" style="--live-poster: url('./media/431841280/live-poster.webp')">
           <div class="stage-label" id="run-status" role="status">Loading anatomy…</div>
           <div class="start" id="start-panel" hidden>
             <button id="start" class="primary">Start walking</button>
@@ -75,7 +75,7 @@
         <div><dt>Walk time</dt><dd id="duration">—</dd></div>
         <div><dt>Displacement</dt><dd id="distance">—</dd></div>
       </dl>
-      <p class="small-note">MS-Human-700 · 700 muscle actuators · 50 controller updates per simulated second</p>
+      <p class="small-note">MS-Human-700 · Biomechanics controller · 700 muscle actuators · 50 controller updates per simulated second</p>
       <p id="status-note" class="small-note" role="status"></p>
       <noscript><p class="small-note">JavaScript is required for the live simulation and replay.</p></noscript>
     </section>
@@ -93,9 +93,9 @@
       <p class="lede">At the end of a step, the calf pulls on the heel through the Achilles tendon. The tendon runs behind the ankle, so the pull lifts the heel as the forefoot presses against the ground.</p>
       <figure class="gait-strip">
         <ol class="gait-frames" aria-label="Three moments from one simulated stride">
-          <li><img src="./explainer/walk-1.webp" width="440" height="550" loading="lazy" decoding="async" alt="Side view of the walking model at 0.20 seconds"><span>0.20 s</span></li>
-          <li><img src="./explainer/walk-2.webp" width="440" height="550" loading="lazy" decoding="async" alt="The same walker with its legs passing at 0.48 seconds"><span>0.48 s</span></li>
-          <li><img src="./explainer/walk-3.webp" width="440" height="550" loading="lazy" decoding="async" alt="The same walker farther through the stride at 0.80 seconds"><span>0.80 s</span></li>
+          <li><img src="./media/431841280/walk-1.webp" width="440" height="550" loading="lazy" decoding="async" alt="Side view of the walking model at 0.24 seconds"><span>0.24 s</span></li>
+          <li><img src="./media/431841280/walk-2.webp" width="440" height="550" loading="lazy" decoding="async" alt="The same walker with its legs passing at 0.48 seconds"><span>0.48 s</span></li>
+          <li><img src="./media/431841280/walk-3.webp" width="440" height="550" loading="lazy" decoding="async" alt="The same walker farther through the stride at 0.80 seconds"><span>0.80 s</span></li>
         </ol>
         <figcaption>Three frames from one stride. Each leg takes a turn supporting the body and swinging forward.</figcaption>
       </figure>
@@ -159,7 +159,7 @@
             </div>
             <span id="replay-time" class="timecode">0.00 s</span>
           </div>
-          <video id="replay-video" muted playsinline preload="auto" poster="./media/replay-poster.webp" aria-label="Sideways push simulation replay"></video>
+          <video id="replay-video" muted playsinline preload="auto" data-media="./media/431841280/" poster="./media/431841280/replay-poster.webp" aria-label="Sideways push simulation replay"></video>
           <div id="push-flag" class="push-flag" hidden>Sideways push</div>
           <div class="replay-transport">
             <button id="replay-play" type="button" aria-label="Play replay" disabled>Play</button>
