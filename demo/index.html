@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Motion Lab · Learn to Walk · Łukasz Kidziński</title>
+  <meta name="description" content="Run a live 700-muscle walker and explore how a learned controller responds to a sideways push.">
+  <link rel="canonical" href="https://kidzinski.com/demo/">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./demo.css?v=1">
+  <script type="importmap">{"imports":{"three":"../learn-to-walk/vendor/three.module.min.js"}}</script>
+  <script type="module" src="../learn-to-walk/viewer.js?v=3"></script>
+  <script type="module" src="./demo.js?v=1"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to demo</a>
+  <header class="topbar shell">
+    <a class="wordmark" href="../"><span class="wordmark-mark" aria-hidden="true"></span> Łukasz Kidziński</a>
+    <nav aria-label="On this page">
+      <a href="#live">Live lab</a>
+      <a href="#replay">Compare</a>
+      <a href="#research">Research</a>
+    </nav>
+  </header>
+  <main id="main">
+    <section class="hero shell" id="live" aria-labelledby="title">
+      <div class="intro">
+        <p class="eyebrow">Interactive research · Human movement</p>
+        <h1 id="title">How do we<br>learn to <em>walk?</em></h1>
+        <p class="intro-deck">Every step is a balance problem. Give a simulated walker a sideways push and see how its muscles respond.</p>
+        <a class="intro-link" href="#replay">Compare two walks <span aria-hidden="true">↓</span></a>
+        <dl class="hero-facts">
+          <div><dt>700</dt><dd>muscle actuators</dd></div>
+          <div><dt>50 Hz</dt><dd>controller updates</dd></div>
+        </dl>
+      </div>
+      <div class="live-card">
+        <div class="live-top"><h2>Live simulation</h2><span>MS-Human-700</span></div>
+        <div class="stage" id="stage" data-preview-pose="./media/preview-pose.json">
+          <div class="stage-label" id="run-status" role="status">Loading anatomy…</div>
+          <div class="start" id="start-panel" hidden>
+            <button id="start" class="primary">Start walking</button>
+            <small id="start-note">Runs on this device · about 160–180 MB to load</small>
+          </div>
+          <div class="stage-controls">
+            <button id="pause" disabled>Pause</button>
+            <button id="reset-walk" disabled>Reset walk</button>
+            <button id="push" class="push" disabled>Push sideways</button>
+          </div>
+        </div>
+        <div class="toolbar">
+          <div class="view-controls" role="group" aria-label="Camera angles">
+            <button data-view="front">Front</button><button data-view="side">Side</button><button data-view="back">Back</button>
+          </div>
+          <div class="display-controls">
+            <label><input type="checkbox" id="muscles" checked> Muscles</label>
+            <label><input type="checkbox" id="activation" checked> Activation</label>
+          </div>
+        </div>
+        <dl class="metrics">
+          <div><dt>Average speed</dt><dd id="speed">—</dd></div>
+          <div><dt>Walk time</dt><dd id="duration">—</dd></div>
+          <div><dt>Displacement</dt><dd id="distance">—</dd></div>
+        </dl>
+        <div class="live-bottom"><p>Drag to orbit · scroll or pinch to zoom</p><p id="status-note" role="status"></p></div>
+        <noscript><p class="live-bottom">JavaScript is required for the live simulation.</p></noscript>
+      </div>
+    </section>
+
+    <div class="paper">
+      <section class="replay shell" id="replay" aria-labelledby="replay-heading">
+        <div class="section-head">
+          <div><p class="eyebrow">Recorded experiment</p><h2 id="replay-heading">What changes after a push?</h2></div>
+          <p>Same controller, same start. One walk gets a brief sideways push. Scrub to compare.</p>
+        </div>
+        <div class="replay-card">
+          <div class="replay-stage">
+            <div class="replay-top">
+              <div class="segments" role="group" aria-label="Replay condition">
+                <button data-condition="steady" aria-pressed="false">No push</button>
+                <button data-condition="push" aria-pressed="true">Sideways push</button>
+              </div>
+              <span id="replay-time" class="timecode">0.00 s</span>
+            </div>
+            <video id="replay-video" muted playsinline preload="auto" poster="./media/replay-poster.webp" aria-label="Sideways push simulation replay"></video>
+            <div id="push-flag" class="push-flag" hidden>Sideways push</div>
+            <div class="replay-transport">
+              <button id="replay-play" type="button" aria-label="Play replay" disabled>Play</button>
+              <label class="visually-hidden" for="replay-scrub">Replay time</label>
+              <input type="range" id="replay-scrub" min="0" max="4.8" value="0" step="0.02">
+              <button id="jump-push" class="ghost" type="button">Jump to push</button>
+            </div>
+          </div>
+          <div class="trace">
+            <div class="trace-head"><h3>Read the response</h3><span class="trace-meta" id="trace-meta">Loading trace…</span></div>
+            <div class="segments trace-options" role="group" aria-label="Measurement to plot">
+              <button data-metric="0" aria-pressed="true">Sideways drift</button>
+              <button data-metric="1" aria-pressed="false">Forward speed</button>
+              <button data-metric="2" aria-pressed="false">Muscle activation</button>
+            </div>
+            <div class="plot"><canvas id="trace-chart" role="img" aria-label="Sideways drift over time for both simulated walks"></canvas></div>
+            <dl class="trace-readout">
+              <div><dt><i class="swatch steady"></i> No push</dt><dd id="steady-reading">—</dd></div>
+              <div><dt><i class="swatch pushed"></i> Sideways push</dt><dd id="push-reading">—</dd></div>
+            </dl>
+            <p class="trace-note" id="trace-note">Offset from the starting line. The shaded band marks when the force was applied.</p>
+            <p class="trace-note" id="replay-error" role="status" hidden></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="controller shell" aria-labelledby="controller-heading">
+        <div class="section-head">
+          <div><p class="eyebrow">Inside the model</p><h2 id="controller-heading">A loop, fifty times a second.</h2></div>
+          <p>Choose a step to see what goes into each decision.</p>
+        </div>
+        <div class="loop">
+          <div class="loop-buttons" role="group" aria-label="Steps in the control loop">
+            <button data-loop="sense" aria-pressed="true"><span class="loop-icon signal" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>Sense the body</button>
+            <span class="arrow" aria-hidden="true">→</span>
+            <button data-loop="decide" aria-pressed="false"><span class="loop-icon network" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>Choose muscle commands</button>
+            <span class="arrow" aria-hidden="true">→</span>
+            <button data-loop="move" aria-pressed="false"><span class="loop-icon motion" aria-hidden="true"><i></i><i></i><i></i></span>Move in physics</button>
+          </div>
+          <div class="loop-feedback" aria-hidden="true"><span>Updated body state</span></div>
+          <p id="loop-detail" role="status">The controller reads joint motion, muscle state and foot contact, alongside a short preview of the target stride.</p>
+        </div>
+      </section>
+
+      <section class="research shell" id="research" aria-labelledby="research-heading">
+        <div class="research-copy">
+          <p class="eyebrow">The question behind the demo</p>
+          <h2 id="research-heading">Can a model adapt the way we do?</h2>
+          <p>In our 2021 review, we asked how reinforcement learning could help us study movement in new conditions. The Learn to Move challenge tested how controllers changed speed, turned and came to a stop.</p>
+          <p>Here, a controller trained on a human walking reference gets a new test. What happens when a push disturbs its balance?</p>
+          <a class="paper-link" href="https://link.springer.com/article/10.1186/s12984-021-00919-y">Read Song et al. (2021) <span aria-hidden="true">↗</span></a>
+        </div>
+        <aside class="research-aside">
+          <p class="eyebrow">What to look for</p>
+          <ol>
+            <li><strong>Movement</strong> Does the body return toward its original path?</li>
+            <li><strong>Muscles</strong> Where does activation change after the push?</li>
+            <li><strong>Recovery</strong> Does forward motion settle after the disturbance?</li>
+          </ol>
+        </aside>
+      </section>
+
+      <footer class="footer shell">
+        <p>Noncommercial research demo · <a href="../learn-to-walk/SOURCES.md">Sources and licenses</a> · <a href="../learn-to-walk/">Original simulator</a></p>
+        <p>Adapted BodyParts3D anatomy © The Database Center for Life Science, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Colors represent modeled activation in <span id="coverage">mapped</span> muscle paths.</p>
+      </footer>
+    </div>
+  </main>
+</body>
+</html>

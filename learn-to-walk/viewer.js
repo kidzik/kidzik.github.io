@@ -94,11 +94,11 @@ function activationColor(value) {
 
 async function createViewer() {
   const [anatomy, bytes] = await Promise.all([
-    fetch('./anatomy.json').then(response => {
+    fetch(new URL('anatomy.json', import.meta.url)).then(response => {
       if (!response.ok) throw new Error('Anatomy description unavailable.');
       return response.json();
     }),
-    fetch('./anatomy.bin.gz').then(compressedBuffer),
+    fetch(new URL('anatomy.bin.gz', import.meta.url)).then(compressedBuffer),
   ]);
   const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
@@ -305,7 +305,15 @@ function connect(setSnapshot) {
   push.addEventListener('click', () => worker?.postMessage({ type: 'push' }));
 }
 
-createViewer().then(setSnapshot => {
+createViewer().then(async setSnapshot => {
+  if (stage.dataset.previewPose) {
+    try {
+      const response = await fetch(stage.dataset.previewPose);
+      if (response.ok) setSnapshot(await response.json());
+    } catch {
+      // The default anatomy is still available if the optional preview is missing.
+    }
+  }
   connect(setSnapshot);
   status.textContent = 'MS-Human-700 anatomy';
   byId('start-panel').hidden = false;
