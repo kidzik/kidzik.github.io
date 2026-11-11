@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 138" role="img" aria-labelledby="title">
+  <title id="title">A neural policy converts body state into muscle excitations</title>
+  <rect width="260" height="138" fill="#f2ebe0"/>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M22 46h26m-26 23h26m-26 23h26" stroke="#8d7c6d" stroke-dasharray="2 3"/>
+    <path d="M53 46 99 32m-46 14 46 10m-46-10 46 33m-46-10 46-37m-46 37 46-13m-46 13 46 10m-46-10 46 33m-46-10 46-36m-46 36 46-13m-46 13 46 10m4-70 47 14m-47-14 47 36m-47-12 47-10m-47 10 47 13m-47-13 47 36m-47-13 47-33m-47 33 47-10m-47 10 47 13m-47 10 47-33m-47 33 47-10" stroke="#c9b7a6" stroke-width="1.2"/>
+    <g fill="#fbf7ef" stroke="#52483f" stroke-width="1.5">
+      <circle cx="52" cy="46" r="4"/><circle cx="52" cy="69" r="4"/><circle cx="52" cy="92" r="4"/>
+      <circle cx="101" cy="32" r="4"/><circle cx="101" cy="56" r="4"/><circle cx="101" cy="79" r="4"/><circle cx="101" cy="102" r="4"/>
+    </g>
+    <g fill="#e3b4a6" stroke="#973e30" stroke-width="1.5">
+      <circle cx="151" cy="46" r="4"/><circle cx="151" cy="69" r="4"/><circle cx="151" cy="92" r="4"/>
+    </g>
+    <path d="M156 46h15m-15 23h15m-15 23h15m0-55v64m0-32h11" stroke="#8d7c6d"/>
+    <path d="M194 102h41" stroke="#c9b7a6"/>
+    <path d="M197 99V77m8 22V53m8 46V67m8 32V81m8 18V62" stroke="#973e30" stroke-width="4"/>
+    <path d="M197 77V40m8 13V40m8 27V40m8 41V40m8 22V40" stroke="#c9b7a6" stroke-width="4"/>
+  </g>
+</svg>

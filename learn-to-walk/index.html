@@ -7,7 +7,7 @@
   <meta name="description" content="Explore a live 700-muscle walking model and learn how muscles, physics, and reinforcement learning work together.">
   <link rel="canonical" href="https://kidzinski.com/learn-to-walk/">
   <link rel="icon" href="../favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./motion-lab.css?v=2">
+  <link rel="stylesheet" href="./motion-lab.css?v=3">
   <script type="importmap">{"imports":{"three":"./vendor/three.module.min.js"}}</script>
   <script type="module" src="./viewer.js?v=3"></script>
   <script type="module" src="./motion-lab.js?v=2"></script>
@@ -97,14 +97,26 @@
 
     <section class="chapter" id="training" aria-labelledby="training-heading">
       <h2 id="training-heading">How a controller learns to walk</h2>
-      <p class="lede">A <strong>policy</strong> is a neural network that decides what to do next. Here it reads the body’s motion, muscle state, foot contact and a short preview of the target stride. It then issues 700 muscle commands. MuJoCo advances the body under those commands, gravity and ground contact. That feedback loop runs 50 times a simulated second.</p>
+      <p class="lede">A <strong>policy</strong> is a neural network that decides what to do next. Follow one decision from the body’s current state to the next movement. This loop repeats 50 times a simulated second.</p>
       <figure class="loop-figure">
         <div class="loop-buttons" role="group" aria-label="Explore the controller feedback loop">
-          <button data-loop="sense" aria-pressed="true"><span>01</span> Sense the body</button>
-          <button data-loop="decide" aria-pressed="false"><span>02</span> Choose muscle commands</button>
-          <button data-loop="move" aria-pressed="false"><span>03</span> Move in physics</button>
+          <button type="button" data-loop="sense" aria-pressed="true" aria-controls="loop-detail">
+            <img src="./explainer/loop-sense.svg" width="260" height="138" alt="" loading="lazy" decoding="async">
+            <span class="loop-label"><span class="loop-step" aria-hidden="true">01</span> Sense the body</span>
+            <span class="loop-summary" aria-hidden="true">Joint motion, muscle state, foot contact</span>
+          </button>
+          <button type="button" data-loop="decide" aria-pressed="false" aria-controls="loop-detail">
+            <img src="./explainer/loop-decide.svg" width="260" height="138" alt="" loading="lazy" decoding="async">
+            <span class="loop-label"><span class="loop-step" aria-hidden="true">02</span> Choose muscle commands</span>
+            <span class="loop-summary" aria-hidden="true">Neural policy → 700 excitations</span>
+          </button>
+          <button type="button" data-loop="move" aria-pressed="false" aria-controls="loop-detail">
+            <img src="./explainer/loop-move.svg" width="260" height="138" alt="" loading="lazy" decoding="async">
+            <span class="loop-label"><span class="loop-step" aria-hidden="true">03</span> Move in physics</span>
+            <span class="loop-summary" aria-hidden="true">Muscles, gravity and ground contact</span>
+          </button>
         </div>
-        <p class="loop-feedback">↶ The new body state feeds back into the next decision.</p>
+        <p class="loop-feedback"><span><span aria-hidden="true">↶</span> New body state → next decision, 20 ms later.</span></p>
         <figcaption id="loop-detail" role="status">The controller reads joint motion, muscle state and foot contact, alongside a short preview of the target stride.</figcaption>
       </figure>
       <h3>What happened before you clicked Start</h3>
@@ -159,10 +171,19 @@
     <section class="chapter" id="research" aria-labelledby="research-heading">
       <h2 id="research-heading">What could we learn from a simulated walker?</h2>
       <p class="lede">A simulation lets researchers change one condition, keep the others fixed and watch how the body responds. In our <a href="https://link.springer.com/article/10.1186/s12984-021-00919-y">review of reinforcement learning for human locomotion (Song et al., 2021)</a>, we describe how the Learn to Move challenge used this idea to test changes in speed, turns and transitions to standing.</p>
-      <ul class="applications">
-        <li><h3>Assistive devices</h3><p>Try different amounts and timings of ankle assistance before building a prototype. Does a design reduce the model’s calf effort or shift the work to the knee and hip?</p></li>
-        <li><h3>Rehabilitation research</h3><p>Change the strength of one muscle group and study how the model compensates. The result can suggest which motions or muscle activity to measure in a human study.</p></li>
-        <li><h3>Legged robotics</h3><p>Use the same feedback ideas to study how a robot might place its next foot after a disturbance. The robot would need a controller trained for its own sensors, motors and body.</p></li>
+      <ul class="applications" role="list">
+        <li>
+          <img src="./explainer/application-assistance.svg" width="260" height="138" alt="An ankle brace with a powered hinge. A curved arrow shows where it helps turn the ankle." loading="lazy" decoding="async">
+          <div><h3>Assistive devices</h3><p>Try different amounts and timings of ankle assistance before building a prototype. Does a design reduce the model’s calf effort or shift the work to the knee and hip?</p></div>
+        </li>
+        <li>
+          <img src="./explainer/application-rehab.svg" width="260" height="138" alt="Two simulated lower legs, one with baseline calf strength and one with reduced calf strength." loading="lazy" decoding="async">
+          <div><h3>Rehabilitation research</h3><p>Change the strength of one muscle group and study how the model compensates. The result can suggest which motions or muscle activity to measure in a human study.</p></div>
+        </li>
+        <li>
+          <img src="./explainer/application-robotics.svg" width="260" height="138" alt="A push on a two-legged robot. A dashed footprint marks a possible place for its next step." loading="lazy" decoding="async">
+          <div><h3>Legged robotics</h3><p>Use the same feedback ideas to study how a robot might place its next foot after a disturbance. The robot would need a controller trained for its own sensors, motors and body.</p></div>
+        </li>
       </ul>
       <p class="reading-note">This demo shows one model on level ground. Testing human predictions would require independent measurements such as motion capture, ground reaction forces and EMG.</p>
     </section>

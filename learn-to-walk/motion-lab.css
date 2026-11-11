@@ -88,13 +88,21 @@ figcaption { margin: 8px 0 0; }
 .prose { max-width: 54ch; }
 .prose p { margin: 9px 0 0; }
 
-.loop-figure { margin: 0 0 28px; padding: 12px 0; border-block: 1px solid var(--line); }
-.loop-buttons { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-.loop-buttons button { background: transparent; border-color: var(--line); text-align: left; min-height: 42px; }
-.loop-buttons button[aria-pressed=true] { border-color: #c69488; color: #7e3026; background: #f4e6e0; }
-.loop-buttons span { color: var(--rust); margin-right: .25em; font-variant-numeric: tabular-nums; }
-.loop-feedback { margin: 9px 0 0; color: var(--muted); font-size: .77rem; }
-#loop-detail { min-height: 1.6em; font-size: .92rem; }
+.loop-figure { --loop-gap: clamp(22px, 4vw, 46px); margin: 0 0 28px; padding: 12px 0 15px; border-block: 1px solid var(--line); }
+.loop-buttons { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--loop-gap); }
+.loop-buttons button { position: relative; display: grid; align-content: start; min-width: 0; background: var(--surface); border-color: var(--line); padding: 0 0 10px; text-align: left; }
+.loop-buttons button:hover:not(:disabled) { filter: none; border-color: #b99180; }
+.loop-buttons button[aria-pressed=true] { border-color: #b77969; box-shadow: inset 0 -2px var(--rust); }
+.loop-buttons button:not(:last-child)::after { position: absolute; left: calc(100% + 1px); top: 36%; width: var(--loop-gap); color: #786d61; content: '→' / ''; text-align: center; font: 1.2rem var(--serif); pointer-events: none; }
+.loop-buttons img { display: block; width: 100%; height: auto; border-radius: 4px 4px 0 0; }
+.loop-label { display: block; margin: 9px 11px 0; font-weight: 640; line-height: 1.3; }
+.loop-step { color: var(--rust); margin-right: .25em; font-variant-numeric: tabular-nums; font-weight: 500; }
+.loop-summary { display: block; margin: 4px 11px 0; color: var(--muted); font-size: .76rem; line-height: 1.3; }
+.loop-feedback { position: relative; display: flex; justify-content: center; margin: 0 calc((100% - 2 * var(--loop-gap)) / 6) 12px; padding-top: 14px; border: 1px solid var(--line); border-top: 0; border-radius: 0 0 6px 6px; color: var(--muted); font-size: .77rem; text-align: center; }
+.loop-feedback::before { content: ''; position: absolute; width: 6px; height: 6px; left: -4px; top: 1px; border-top: 1px solid #8d7c6d; border-left: 1px solid #8d7c6d; transform: rotate(45deg); }
+.loop-feedback > span { background: var(--paper); margin: 0 8px -1em; padding: 0 .55em; }
+.loop-feedback span[aria-hidden] { color: var(--rust); font-size: 1.05em; }
+#loop-detail { max-width: 77ch; min-height: 1.65em; margin-top: 20px; font-size: .92rem; }
 .training-steps { list-style: none; padding: 0; margin: 15px 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(16px, 3vw, 37px); counter-reset: steps; }
 .training-steps li { border-top: 1px solid var(--line); padding-top: 9px; counter-increment: steps; }
 .training-steps li::before { content: '0' counter(steps); font-variant-numeric: tabular-nums; font-size: .8rem; color: var(--rust); margin-right: .55em; }
@@ -129,7 +137,9 @@ figcaption { margin: 8px 0 0; }
 .swatch.steady { border-color: var(--teal); border-top-style: dashed; }
 
 .applications { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(16px, 3vw, 37px); margin: 0; padding: 0; }
-.applications li { border-top: 1px solid var(--line); padding-top: 12px; }
+.applications li { min-width: 0; }
+.applications img { display: block; width: 100%; height: auto; border-radius: 5px; }
+.applications h3 { margin-top: 10px; }
 footer { margin: 44px 0 0; padding: 11px 0 25px; border-top: 1px solid var(--line); color: var(--muted); font-size: .8rem; }
 footer p { margin: 7px 0 0; }
 
@@ -139,8 +149,20 @@ footer p { margin: 7px 0 0; }
   .chapter { margin-top: 36px; padding-top: 22px; }
   .muscle-spread, .replay-card, .training-steps, .applications { grid-template-columns: minmax(0, 1fr); }
   .ankle-figure { max-width: 480px; }
-  .loop-buttons button { padding: 5px 6px; font-size: .77rem; }
-  .loop-buttons span { display: block; }
+  .applications { gap: 24px; }
+  .applications img { max-width: 440px; }
+}
+@media (max-width: 540px) {
+  .loop-buttons { grid-template-columns: minmax(0, 1fr); gap: 19px; }
+  .loop-buttons button { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); grid-template-rows: auto auto; align-content: center; min-height: 74px; padding-bottom: 0; }
+  .loop-buttons img { grid-row: 1 / 3; height: 100%; object-fit: contain; border-radius: 4px 0 0 4px; background: #f2ebe0; }
+  .loop-label { align-self: end; margin-top: 6px; }
+  .loop-summary { align-self: start; margin-bottom: 6px; }
+  .loop-buttons button:not(:last-child)::after { content: '↓' / ''; left: 0; top: 100%; width: 100%; }
+  .loop-feedback { display: block; margin: 10px 0 0; padding-top: 0; border: 0; text-align: left; }
+  .loop-feedback::before { display: none; }
+  .loop-feedback > span { margin: 0; padding: 0; }
+  #loop-detail { margin-top: 7px; min-height: 4.9em; }
 }
 @media (max-width: 360px) {
   .under-viewer { gap: 0 12px; }

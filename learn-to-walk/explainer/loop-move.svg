@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 138" role="img" aria-labelledby="title">
+  <title id="title">Muscle action, gravity and ground contact change the pose</title>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#973e30"/>
+    </marker>
+  </defs>
+  <rect width="260" height="138" fill="#f2ebe0"/>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M34 126h192" stroke="#8d7c6d"/>
+    <path d="M51 17c6 17 17 32 32 45 7 7 5 10 4 18l-3 28 21 6c6 2 7 7 1 9H78c-6 0-8-4-8-10l3-32c0-5-2-8-6-11C51 59 42 42 36 24" stroke="#ae9a89" stroke-width="1.35" stroke-dasharray="3 4"/>
+    <path d="M102 15c5 17 17 35 32 47 6 5 5 10 3 17l-8 29 25 6c8 2 9 7 3 9h-33c-8 0-12-4-10-12l6-30c1-4-1-7-5-11-15-12-26-27-30-46" fill="#fbf7ef" stroke="#52483f" stroke-width="1.6"/>
+    <path d="M90 24c6 19 20 33 34 44m2 9-7 32 28 10" stroke="#c9b7a6" stroke-width="2"/>
+    <path d="M124 78c-8 7-9 17-8 26 5-3 7-7 9-12l3-14Z" fill="#e3b4a6" stroke="#973e30"/>
+    <circle cx="128" cy="68" r="3.5" fill="#f2ebe0" stroke="#52483f" stroke-width="1.5"/>
+    <path d="M151 126V98" stroke="#973e30" stroke-width="1.8" marker-end="url(#arrow)"/>
+    <path d="M193 27v32" stroke="#973e30" stroke-width="1.8" marker-end="url(#arrow)"/>
+    <text x="201" y="49" font-family="Georgia, serif" font-style="italic" font-size="13" fill="#52483f">g</text>
+  </g>
+</svg>
