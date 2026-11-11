@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from './vendor/OrbitControls.js';
-import { compressedBuffer } from './simulation.js?v=3';
+import { compressedBuffer } from './simulation.js?v=4';
+import { BALL_RADIUS } from './ball.js?v=1';
 
 const byId = id => document.getElementById(id);
 const stage = byId('stage');
@@ -8,6 +9,8 @@ const status = byId('run-status');
 const note = byId('status-note');
 const muscleToggle = byId('muscles');
 const activationToggle = byId('activation');
+const ballToggle = byId('ball-throws');
+const ballStatus = byId('ball-status');
 const touchDevice = /Android|iPhone|iPad|iPod/.test(navigator.userAgent)
   || (navigator.maxTouchPoints > 0 && (matchMedia('(pointer: coarse)').matches || navigator.platform === 'MacIntel'));
 const views = {
@@ -144,6 +147,14 @@ async function createViewer() {
   grid.position.z = -.014;
   scene.add(grid);
 
+  const ball = new THREE.Mesh(
+    new THREE.SphereGeometry(BALL_RADIUS, 24, 16),
+    new THREE.MeshStandardMaterial({ color: 0xffab56, roughness: .74 }),
+  );
+  ball.visible = false;
+  scene.add(ball);
+  const ballStart = new THREE.Vector3();
+
   const paletteBytes = new Uint8Array(anatomy.surfaces.length*4);
   const palette = new THREE.DataTexture(paletteBytes, anatomy.surfaces.length, 1);
   palette.colorSpace = THREE.SRGBColorSpace;
@@ -185,6 +196,13 @@ async function createViewer() {
     dirty = true;
   }
   for (const toggle of [muscleToggle, activationToggle]) toggle.addEventListener('change', updatePalette);
+  ballToggle.addEventListener('change', () => {
+    if (!ballToggle.checked) {
+      ball.visible = false;
+      ballStatus.hidden = true;
+      dirty = true;
+    }
+  });
   controls.addEventListener('change', () => { dirty = true; });
 
   function setSnapshot(frame) {
@@ -193,6 +211,7 @@ async function createViewer() {
     blendDuration = Math.min(100, Math.max(20, time-blendStart));
     blendStart = time;
     current = frame;
+    ballStatus.hidden = !ballToggle.checked || !frame.ball;
     updatePalette();
   }
 
@@ -223,6 +242,13 @@ async function createViewer() {
         previousRotation.fromArray(a,index+3);
         nextRotation.fromArray(b,index+3);
         bone.quaternion.slerpQuaternions(previousRotation,nextRotation,amount);
+      }
+      ball.visible = ballToggle.checked && !!current.ball;
+      if (ball.visible) {
+        const position = current.ball.position;
+        const from = previous.ball?.id === current.ball.id ? previous.ball.position : position;
+        ballStart.fromArray(from);
+        ball.position.fromArray(position).lerp(ballStart, 1-amount);
       }
       grid.position.x = -(current.x % .5);
       grid.position.y = -(current.y % .5);
@@ -330,7 +356,7 @@ function connect(setSnapshot) {
     phase('Preparing the download…');
     note.textContent = '';
     try {
-      worker = new Worker(new URL('physics-worker.js?v=4', import.meta.url), { type: 'module' });
+      worker = new Worker(new URL('physics-worker.js?v=5', import.meta.url), { type: 'module' });
     } catch (error) {
       fail(error.message);
       return;
@@ -380,7 +406,8 @@ function connect(setSnapshot) {
     };
     const requested = new URL(location.href).searchParams.get('backend');
     const bundleURL = stage.dataset.policy ? new URL(stage.dataset.policy, import.meta.url).href : undefined;
-    worker.postMessage({ type: 'start', backend: requested || (touchDevice ? 'wasm' : null), bundleURL });
+    worker.postMessage({ type: 'start', backend: requested || (touchDevice ? 'wasm' : null),
+      bundleURL, throwsEnabled: ballToggle.checked });
   });
 
   pause.addEventListener('click', () => {
@@ -391,6 +418,7 @@ function connect(setSnapshot) {
   });
   reset.addEventListener('click', () => worker?.postMessage({ type: 'reset' }));
   push.addEventListener('click', () => worker?.postMessage({ type: 'push' }));
+  ballToggle.addEventListener('change', () => worker?.postMessage({ type: 'ball-throws', enabled: ballToggle.checked }));
 }
 
 connectFullscreen();

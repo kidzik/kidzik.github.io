@@ -1,3 +1,5 @@
+import { addBallBody, BallThrows } from './ball.js?v=1';
+
 // Browser implementation of the checkpoint's observation and control contract.
 export async function compressedBuffer(response) {
   if (!response.ok) throw new Error(`Could not load ${response.url} (HTTP ${response.status}).`);
@@ -83,15 +85,16 @@ export function buildObservation(state, schema, reference, output = new Float32A
 }
 
 export class WalkingSimulation {
-  constructor(mujoco, model, data, manifest, references, ort, actor, backend) {
+  constructor(mujoco, model, data, manifest, references, ort, actor, backend, ballSupport) {
     Object.assign(this, { mujoco, model, data, manifest, references, ort, actor, backend });
     this.observation = new Float32Array(manifest.observation.size);
     this.observationTensor = new ort.Tensor('float32', this.observation, [1, this.observation.length]);
     this.noiseOffset = manifest.referenceFrames * manifest.referenceStride;
+    this.ball = ballSupport ? new BallThrows(model, data, manifest, frame => this.reference(frame)) : null;
     this.reset();
   }
 
-  static async create({ manifest, xml, physics, references, actorWeights, backend = 'wasm', vendor, progress = () => {} }) {
+  static async create({ manifest, xml, physics, references, actorWeights, backend = 'wasm', vendor, progress = () => {}, ballSupport = false }) {
     const useGpu = backend === 'webgpu';
     const ortModule = useGpu ? 'ort.webgpu.bundle.min.mjs' : 'ort.wasm.bundle.min.mjs';
     const [ort, { default: loadMujoco }] = await Promise.all([
@@ -110,12 +113,13 @@ export class WalkingSimulation {
       for (const [name, start, size] of manifest.assets) {
         vfs.addBuffer(name, bytes.subarray(start, start + size));
       }
-      model = mujoco.MjModel.from_xml_string(xml, vfs);
+      model = mujoco.MjModel.from_xml_string(ballSupport ? addBallBody(xml) : xml, vfs);
     } finally {
       vfs.delete();
     }
+    const extra = ballSupport ? { nq: 7, nv: 6, nbody: 1 } : {};
     for (const [key, value] of Object.entries(manifest.dimensions)) {
-      if (model[key] !== value) {
+      if (model[key] !== value + (extra[key] ?? 0)) {
         model.delete();
         throw new Error(`Model shape mismatch for ${key}.`);
       }
@@ -132,7 +136,7 @@ export class WalkingSimulation {
       throw error;
     }
     return new WalkingSimulation(mujoco, model, new mujoco.MjData(model),
-      manifest, new Float32Array(references), ort, actor, backend);
+      manifest, new Float32Array(references), ort, actor, backend, ballSupport);
   }
 
   reference(frame = this.frame) {
@@ -146,12 +150,17 @@ export class WalkingSimulation {
     const { mujoco, model, data, manifest } = this;
     mujoco.mj_resetData(model, data);
     for (const field of ['qpos', 'qvel', 'act', 'ctrl']) data[field].set(manifest.reset[field]);
+    this.ball?.reset();
     mujoco.mj_forward(model, data);
     data.qacc_warmstart.set(manifest.reset.qacc_warmstart);
     this.frame = 0;
     this.pushFrames = 0;
     this.start = [data.qpos[0], data.qpos[1]];
     this.done = null;
+  }
+
+  setBallThrows(enabled) {
+    this.ball?.setEnabled(enabled, this.frame);
   }
 
   async meanAction(observation = this.observation) {
@@ -176,6 +185,7 @@ export class WalkingSimulation {
     }
     data.xfrc_applied[manifest.pelvis*6] = this.pushFrames > 0 ? 40 : 0;
     if (this.pushFrames > 0) this.pushFrames--;
+    this.ball?.advance(this.frame);
     for (let i = 0; i < manifest.substeps; i++) mujoco.mj_step(model, data);
     this.inferenceMs = t1-t0;
     this.physicsMs = performance.now()-t1;
@@ -213,6 +223,6 @@ export class WalkingSimulation {
     }
     const seconds = this.frame * manifest.dt;
     const distance = Math.hypot(x-this.start[0], y-this.start[1]);
-    return { bones, groups, x, y, seconds, distance, done: this.done };
+    return { bones, groups, x, y, seconds, distance, done: this.done, ball: this.ball?.snapshot(x, y) ?? null };
   }
 }

@@ -28,7 +28,8 @@
 .viewer { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--surface); }
 .stage { position: relative; isolation: isolate; color: #f8f5ee; height: clamp(330px, 55vh, 625px); background: #171a20 var(--live-poster, url('./media/live-poster.webp')) center / contain no-repeat; }
 .stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: -1; touch-action: none; }
-.stage-label { position: absolute; top: 13px; left: 14px; padding: 4px 7px; color: #ece5da; background: #181b20e6; border-radius: 5px; font-size: .76rem; pointer-events: none; }
+.stage-label, .ball-status { position: absolute; top: 13px; left: 14px; padding: 4px 7px; color: #ece5da; background: #181b20e6; border-radius: 5px; font-size: .76rem; pointer-events: none; }
+.ball-status { left: auto; right: 14px; color: #ffd5a2; }
 .start { position: absolute; left: 50%; bottom: 16px; transform: translateX(-50%); display: grid; gap: 6px; justify-items: center; width: max-content; max-width: calc(100% - 24px); text-align: center; }
 .start button { color: #2f221b; background: #efcfb5; border-color: #efcfb5; font-weight: 650; padding: 8px 18px; }
 .start small { max-width: 38ch; color: #f0eae1; text-shadow: 0 1px 8px black; font-size: .74rem; }
@@ -51,7 +52,7 @@ body:has(.viewer-dialog[open]) { overflow: hidden; }
 .toolbar, .under-viewer { display: flex; justify-content: space-between; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
 .toolbar { padding: 9px 12px; }
 .view-controls, .display-controls, .legend { display: flex; align-items: center; gap: 6px; }
-.display-controls { gap: 14px; font-size: .82rem; }
+.display-controls { flex-wrap: wrap; gap: 6px 14px; font-size: .82rem; }
 .display-controls label { display: flex; align-items: center; gap: 4px; }
 .under-viewer, .small-note, figcaption { color: var(--muted); font-size: .82rem; }
 .under-viewer p { margin: 7px 0; }
@@ -173,6 +174,7 @@ figcaption { margin: 8px 0 0; }
 }
 @media (max-width: 360px) {
   .under-viewer { gap: 0 12px; }
+  .ball-status { top: 39px; left: 14px; right: auto; }
   .under-viewer p { margin: 4px 0; }
   .replay-transport { flex-wrap: wrap; }
   .replay-transport input { order: 3; flex-basis: 100%; }

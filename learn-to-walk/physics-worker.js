@@ -1,4 +1,4 @@
-import { WalkingSimulation } from './simulation.js?v=3';
+import { WalkingSimulation } from './simulation.js?v=4';
 
 let simulation;
 let loading = false;
@@ -6,6 +6,7 @@ let paused = true;
 let scheduled = false;
 let pendingReset = false;
 let pendingPush = false;
+let throwsEnabled = true;
 let deadline = 0;
 let averageMs = 0;
 
@@ -73,7 +74,7 @@ async function initialize(preferredBackend, bundleURL) {
   reportDownload(true);
   const progress = text => postMessage({ type: 'progress', text });
   progress('Loading the simulation engine…');
-  const assets = { manifest, xml, physics, references, actorWeights,
+  const assets = { manifest, xml, physics, references, actorWeights, ballSupport: true,
     vendor: new URL('./vendor/', import.meta.url), progress };
   const useGpu = preferredBackend !== 'wasm' && !!(await navigator.gpu?.requestAdapter().catch(() => null));
   if (useGpu) {
@@ -94,6 +95,8 @@ async function initialize(preferredBackend, bundleURL) {
     simulation = await WalkingSimulation.create(assets);
     await simulation.meanAction();
   }
+  simulation.setBallThrows(throwsEnabled);
+  loading = false;
   postMessage({ type: 'ready', backend: simulation.backend, steps: manifest.checkpointSteps });
   paused = false;
   deadline = performance.now();
@@ -149,6 +152,7 @@ async function tick() {
 self.onmessage = ({ data }) => {
   if (data.type === 'start' && !simulation && !loading) {
     loading = true;
+    throwsEnabled = data.throwsEnabled !== false;
     initialize(data.backend, data.bundleURL).catch(error => postMessage({ type: 'error', message: error.message }));
   } else if (data.type === 'pause') {
     paused = data.paused;
@@ -159,6 +163,12 @@ self.onmessage = ({ data }) => {
   } else if (data.type === 'reset') {
     pendingReset = true;
     schedule();
+  } else if (data.type === 'ball-throws') {
+    throwsEnabled = data.enabled === true;
+    if (simulation && !loading) {
+      simulation.setBallThrows(throwsEnabled);
+      publish();
+    }
   } else if (data.type === 'push') {
     pendingPush = true;
   }

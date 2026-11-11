@@ -9,9 +9,9 @@
   <link rel="canonical" href="https://kidzinski.com/learn-to-walk/">
   <link rel="icon" href="../favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../css/site.css?v=2">
-  <link rel="stylesheet" href="./motion-lab.css?v=8">
+  <link rel="stylesheet" href="./motion-lab.css?v=9">
   <script type="importmap">{"imports":{"three":"./vendor/three.module.min.js"}}</script>
-  <script type="module" src="./viewer.js?v=5"></script>
+  <script type="module" src="./viewer.js?v=6"></script>
   <script type="module" src="./motion-lab.js?v=5"></script>
 </head>
 <body>
@@ -33,13 +33,14 @@
     <header class="page-head">
       <p class="walk-kicker"><a href="../#research">Selected projects</a> <span aria-hidden="true">/</span> Interactive demo</p>
       <h1>Learn to walk</h1>
-      <p>A neural network controls 700 simulated muscles to make this model walk. Start the simulation, then try pushing the walker sideways.</p>
+      <p>A neural network controls 700 simulated muscles to make this model walk. Start walking to see how it handles an occasional ball throw.</p>
     </header>
 
     <section id="live" aria-label="Live walking simulation">
       <div class="viewer" id="walking-viewer">
         <div class="stage" id="stage" data-policy="./models/431841280/" data-preview-pose="./media/431841280/preview-pose.json" style="--live-poster: url('./media/431841280/live-poster.webp')">
           <div class="stage-label" id="run-status" role="status">Loading anatomy…</div>
+          <div class="ball-status" id="ball-status" role="status" hidden>Ball in play</div>
           <div class="start" id="start-panel" hidden>
             <button id="start" class="primary">Start walking</button>
             <small id="start-note">Runs in your browser. Download: up to 180 MB.</small>
@@ -61,13 +62,14 @@
           <div class="display-controls">
             <label><input type="checkbox" id="muscles" checked> Muscles</label>
             <label><input type="checkbox" id="activation" checked> Activation</label>
+            <label><input type="checkbox" id="ball-throws" checked> Throw balls</label>
           </div>
           <button type="button" id="full-screen" aria-controls="walking-viewer" hidden>Full screen</button>
         </div>
       </div>
       <dialog class="viewer-dialog" id="viewer-dialog" aria-label="Full screen walking simulation"></dialog>
       <div class="under-viewer">
-        <p>Drag to rotate. Scroll or pinch to zoom.</p>
+        <p>Drag to rotate. Scroll or pinch to zoom. Uncheck <strong>Throw balls</strong> to walk without throws.</p>
         <p class="legend"><span aria-hidden="true"></span> Low to high activation</p>
       </div>
       <dl class="metrics">
