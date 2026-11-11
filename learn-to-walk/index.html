@@ -3,23 +3,35 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Learn to walk · Łukasz Kidziński</title>
+  <title>Learn to walk · Lukas Kidzinski</title>
   <meta name="description" content="Explore a live 700-muscle walking model and learn how muscles, physics, and reinforcement learning work together.">
+  <meta name="theme-color" content="#f5f3ee">
   <link rel="canonical" href="https://kidzinski.com/learn-to-walk/">
   <link rel="icon" href="../favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./motion-lab.css?v=3">
+  <link rel="stylesheet" href="../css/site.css?v=2">
+  <link rel="stylesheet" href="./motion-lab.css?v=4">
   <script type="importmap">{"imports":{"three":"./vendor/three.module.min.js"}}</script>
   <script type="module" src="./viewer.js?v=3"></script>
   <script type="module" src="./motion-lab.js?v=2"></script>
 </head>
 <body>
-  <a class="skip" href="#main">Skip to the demo</a>
-  <main id="main">
-    <nav class="site-nav" aria-label="Site">
-      <a href="../">Łukasz Kidziński</a>
-      <a href="../project/">Research</a>
-    </nav>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="wordmark" href="../" aria-label="Lukas Kidzinski, home">Lukas Kidzinski</a>
+      <nav aria-label="Main navigation">
+        <div class="nav-links" id="nav-links">
+          <a href="../#research">Research</a>
+          <a href="../#publications_selected">Publications</a>
+          <a href="../#press">Press</a>
+          <a href="../#contact">Contact</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+  <main class="walk-page shell" id="main" tabindex="-1">
     <header class="page-head">
+      <p class="walk-kicker"><a href="../#research">Selected projects</a> <span aria-hidden="true">/</span> Interactive demo</p>
       <h1>Learn to walk</h1>
       <p>How does a body turn hundreds of muscle pulls into a single step? Explore a walking controller trained with reinforcement learning, then give it a sideways push.</p>
     </header>
@@ -86,7 +98,7 @@
                alt="Side view schematic: the calf pulls upward through the Achilles tendon behind the ankle. With the forefoot on the ground, that pull helps raise the heel.">
           <figcaption>Calf and ankle at push-off, schematic.</figcaption>
         </figure>
-        <div class="prose">
+        <div class="muscle-copy">
           <h3>What the red colors mean</h3>
           <p>The network sends a command called <strong>excitation</strong>. The simulated muscle responds over time; its <strong>activation</strong> is the state shown in red. How much <strong>force</strong> it produces also depends on its length and how fast it is changing length.</p>
           <p>Try switching <strong>Activation</strong> off and on above. The color is a model output. It isn’t a force reading or an electromyogram (EMG), which records electrical activity in real muscles. MS-Human-700 has 700 modeled actuators, and some anatomical surfaces are not mapped to an actuator.</p>
@@ -188,7 +200,7 @@
       <p class="reading-note">This demo shows one model on level ground. Testing human predictions would require independent measurements such as motion capture, ground reaction forces and EMG.</p>
     </section>
 
-    <footer>
+    <footer class="walk-credits">
       <p>Noncommercial research demo · <a href="./SOURCES.md">Sources and licenses</a></p>
       <p>Simulation body: <a href="https://github.com/LNSGroup/MS-Human-700">MS-Human-700</a>. Anatomy adapted from BodyParts3D, © The Database Center for Life Science, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Activation is mapped for <span id="coverage">a subset of</span> modeled actuators.</p>
     </footer>
