@@ -7,11 +7,11 @@ const playButton = id('replay-play');
 
 const signals = [
   {label: 'Sideways drift', unit: 'm', digits: 2,
-    description: 'Offset from the starting line. The shaded band marks when the force was applied.'},
+    description: 'Distance to either side of the starting line. The shaded band marks the push.'},
   {label: 'Forward speed', unit: 'm/s', digits: 2,
-    description: 'Instantaneous velocity along the walking direction.'},
+    description: 'How fast the walker is moving forward at this moment.'},
   {label: 'Mean muscle activation', unit: '%', digits: 1,
-    description: 'Modeled activation averaged across 700 actuators. Muscle color in the replay shows local changes.'},
+    description: 'Average activation across all 700 muscle actuators. The colors show where activation changes.'},
 ];
 const runs = [
   {key: 'steady', label: 'No push', color: '#496664', dash: [5, 4]},
@@ -192,7 +192,7 @@ async function loadClip(key) {
     const url = await clipUrls.get(key);
     if (request === clipRequest) video.src = url;
   } catch (error) {
-    if (request === clipRequest) reportError(error.message + ' The traces can still be explored with the slider.');
+    if (request === clipRequest) reportError(error.message + ' You can still use the slider to read the chart.');
   }
 }
 
@@ -225,7 +225,7 @@ video.addEventListener('pause', () => {
 });
 video.addEventListener('error', () => {
   playButton.disabled = true;
-  reportError('Video unavailable. The traces can still be explored with the slider.');
+  reportError('Video unavailable. You can still use the slider to read the chart.');
 });
 
 playButton.addEventListener('click', () => {
@@ -276,9 +276,9 @@ fetch('./media/walk-traces.json').then(response => {
 });
 
 const loopDetails = {
-  sense: 'The controller reads joint motion, muscle state and foot contact, alongside a short preview of the target stride.',
-  decide: 'A trained neural network turns that information into 700 muscle commands. Each command tells one modeled actuator how strongly to excite the muscle.',
-  move: 'MuJoCo computes how muscles, gravity and ground contact move the body. The next decision uses the resulting state.',
+  sense: 'The network reads joint motion, muscle state, foot contact, and a short preview of the target stride.',
+  decide: 'The network sends 700 commands, one for each muscle actuator. Each command sets the level of excitation.',
+  move: 'MuJoCo calculates the next pose from muscle forces, gravity, and contact with the ground.',
 };
 for (const button of document.querySelectorAll('[data-loop]')) {
   button.addEventListener('click', () => {

@@ -4,15 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Learn to walk · Lukas Kidzinski</title>
-  <meta name="description" content="Explore a live 700-muscle walking model and learn how muscles, physics, and reinforcement learning work together.">
+  <meta name="description" content="Try a walking simulation with 700 muscles controlled by a neural network.">
   <meta name="theme-color" content="#f5f3ee">
   <link rel="canonical" href="https://kidzinski.com/learn-to-walk/">
   <link rel="icon" href="../favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../css/site.css?v=2">
-  <link rel="stylesheet" href="./motion-lab.css?v=6">
+  <link rel="stylesheet" href="./motion-lab.css?v=7">
   <script type="importmap">{"imports":{"three":"./vendor/three.module.min.js"}}</script>
   <script type="module" src="./viewer.js?v=4"></script>
-  <script type="module" src="./motion-lab.js?v=3"></script>
+  <script type="module" src="./motion-lab.js?v=4"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -33,7 +33,7 @@
     <header class="page-head">
       <p class="walk-kicker"><a href="../#research">Selected projects</a> <span aria-hidden="true">/</span> Interactive demo</p>
       <h1>Learn to walk</h1>
-      <p>How does a body turn hundreds of muscle pulls into a single step? Explore a walking controller trained with reinforcement learning, then give it a sideways push.</p>
+      <p>A neural network controls 700 simulated muscles to make this model walk. Start the simulation, then try pushing the walker sideways.</p>
     </header>
 
     <section id="live" aria-label="Live walking simulation">
@@ -42,7 +42,7 @@
           <div class="stage-label" id="run-status" role="status">Loading anatomy…</div>
           <div class="start" id="start-panel" hidden>
             <button id="start" class="primary">Start walking</button>
-            <small id="start-note">Runs on this device · up to about 180 MB to load</small>
+            <small id="start-note">Runs in your browser. Download: up to 180 MB.</small>
             <div class="load-progress" id="load-progress" hidden>
               <progress id="download-meter" aria-label="Model download progress"></progress>
               <small id="download-details"></small>
@@ -67,7 +67,7 @@
       </div>
       <dialog class="viewer-dialog" id="viewer-dialog" aria-label="Full screen walking simulation"></dialog>
       <div class="under-viewer">
-        <p>Drag to orbit · Scroll or pinch to zoom</p>
+        <p>Drag to rotate. Scroll or pinch to zoom.</p>
         <p class="legend"><span aria-hidden="true"></span> Low to high activation</p>
       </div>
       <dl class="metrics">
@@ -75,81 +75,81 @@
         <div><dt>Walk time</dt><dd id="duration">—</dd></div>
         <div><dt>Displacement</dt><dd id="distance">—</dd></div>
       </dl>
-      <p class="small-note">MS-Human-700 · 700 modeled muscle actuators · 50 controller updates per simulated second</p>
+      <p class="small-note">MS-Human-700 · 700 muscle actuators · 50 controller updates per simulated second</p>
       <p id="status-note" class="small-note" role="status"></p>
       <noscript><p class="small-note">JavaScript is required for the live simulation and replay.</p></noscript>
     </section>
 
     <nav class="contents" aria-label="On this page">
       <a href="#muscle-mechanics">Muscles</a>
-      <a href="#training">How it learns</a>
-      <a href="#replay">Push experiment</a>
+      <a href="#training">Training</a>
+      <a href="#replay">Push test</a>
       <a href="#research">Applications</a>
       <a href="#resources">Resources</a>
     </nav>
 
     <section class="chapter" id="muscle-mechanics" aria-labelledby="muscles-heading">
-      <h2 id="muscles-heading">Muscles pull. Walking takes coordination.</h2>
-      <p class="lede">In this model, muscles move the joints by pulling. For example, the calf pulls on the heel through the Achilles tendon. That pull passes behind the ankle joint, giving it a turning effect. Near the end of a step, the calf helps lift the heel and push against the ground.</p>
+      <h2 id="muscles-heading">Walking takes coordination</h2>
+      <p class="lede">At the end of a step, the calf pulls on the heel through the Achilles tendon. The tendon runs behind the ankle, so the pull lifts the heel as the forefoot presses against the ground.</p>
       <figure class="gait-strip">
         <ol class="gait-frames" aria-label="Three moments from one simulated stride">
           <li><img src="./explainer/walk-1.webp" width="440" height="550" loading="lazy" decoding="async" alt="Side view of the walking model at 0.20 seconds"><span>0.20 s</span></li>
           <li><img src="./explainer/walk-2.webp" width="440" height="550" loading="lazy" decoding="async" alt="The same walker with its legs passing at 0.48 seconds"><span>0.48 s</span></li>
           <li><img src="./explainer/walk-3.webp" width="440" height="550" loading="lazy" decoding="async" alt="The same walker farther through the stride at 0.80 seconds"><span>0.80 s</span></li>
         </ol>
-        <figcaption>Three moments from one simulated stride. Watch how the supporting leg and the swinging leg trade roles.</figcaption>
+        <figcaption>Three frames from one stride. Each leg takes a turn supporting the body and swinging forward.</figcaption>
       </figure>
       <div class="muscle-spread">
         <figure class="ankle-figure">
           <img src="./explainer/ankle-lever.svg" width="420" height="284" loading="lazy" decoding="async"
                alt="Side view schematic: the calf pulls upward through the Achilles tendon behind the ankle. With the forefoot on the ground, that pull helps raise the heel.">
-          <figcaption>Calf and ankle at push-off, schematic.</figcaption>
+          <figcaption>How the calf helps lift the heel at push-off.</figcaption>
         </figure>
         <div class="muscle-copy">
-          <h3>What the red colors mean</h3>
-          <p>The network sends a command called <strong>excitation</strong>. The simulated muscle responds over time; its <strong>activation</strong> is the state shown in red. How much <strong>force</strong> it produces also depends on its length and how fast it is changing length.</p>
-          <p>Try switching <strong>Activation</strong> off and on above. The color is a model output. It isn’t a force reading or an electromyogram (EMG), which records electrical activity in real muscles. MS-Human-700 has 700 modeled actuators, and some anatomical surfaces are not mapped to an actuator.</p>
+          <h3>Muscle activation</h3>
+          <p>The red shading shows <strong>activation</strong>, or how active a muscle is in the model. Each muscle takes time to respond to the network’s command, called <strong>excitation</strong>. The force it produces also depends on its length and how fast that length changes.</p>
+          <p>Turn off <strong>Activation</strong> to see the anatomy without the overlay. The colors show simulated activation, which is different from muscle force or the electrical activity recorded by EMG.</p>
         </div>
       </div>
-      <p class="reading-note">The calf is one part of a step. Muscles around the hip help keep the body balanced over the supporting foot, and muscles at the front of the shin lift the forefoot as it swings. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5507211/">Gait studies compare when muscles fire</a> with motion and ground forces to understand how these jobs fit together.</p>
+      <p class="reading-note">Hip muscles help steady the pelvis over the planted foot. Muscles at the front of the shin lift the toes as the other foot swings forward. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5507211/">Gait studies</a> compare muscle activity with movement and ground forces.</p>
     </section>
 
     <section class="chapter" id="training" aria-labelledby="training-heading">
-      <h2 id="training-heading">How a controller learns to walk</h2>
-      <p class="lede">A <strong>policy</strong> is a neural network that decides what to do next. Follow one decision from the body’s current state to the next movement. This loop repeats 50 times a simulated second.</p>
+      <h2 id="training-heading">Training the controller</h2>
+      <p class="lede">The controller, or <strong>policy</strong>, is a neural network that sends new muscle commands every 20 milliseconds of simulated time.</p>
       <figure class="loop-figure">
-        <div class="loop-buttons" role="group" aria-label="Explore the controller feedback loop">
+        <div class="loop-buttons" role="group" aria-label="Controller feedback loop">
           <button type="button" data-loop="sense" aria-pressed="true" aria-controls="loop-detail">
             <img src="./explainer/loop-sense.svg" width="260" height="138" alt="" loading="lazy" decoding="async">
-            <span class="loop-label"><span class="loop-step" aria-hidden="true">01</span> Sense the body</span>
+            <span class="loop-label"><span class="loop-step" aria-hidden="true">01</span> Read the body state</span>
             <span class="loop-summary" aria-hidden="true">Joint motion, muscle state, foot contact</span>
           </button>
           <button type="button" data-loop="decide" aria-pressed="false" aria-controls="loop-detail">
             <img src="./explainer/loop-decide.svg" width="260" height="138" alt="" loading="lazy" decoding="async">
-            <span class="loop-label"><span class="loop-step" aria-hidden="true">02</span> Choose muscle commands</span>
-            <span class="loop-summary" aria-hidden="true">Neural policy → 700 excitations</span>
+            <span class="loop-label"><span class="loop-step" aria-hidden="true">02</span> Send muscle commands</span>
+            <span class="loop-summary" aria-hidden="true">One command per muscle actuator</span>
           </button>
           <button type="button" data-loop="move" aria-pressed="false" aria-controls="loop-detail">
             <img src="./explainer/loop-move.svg" width="260" height="138" alt="" loading="lazy" decoding="async">
-            <span class="loop-label"><span class="loop-step" aria-hidden="true">03</span> Move in physics</span>
+            <span class="loop-label"><span class="loop-step" aria-hidden="true">03</span> Simulate the movement</span>
             <span class="loop-summary" aria-hidden="true">Muscles, gravity and ground contact</span>
           </button>
         </div>
-        <p class="loop-feedback"><span><span aria-hidden="true">↶</span> New body state → next decision, 20 ms later.</span></p>
-        <figcaption id="loop-detail" role="status">The controller reads joint motion, muscle state and foot contact, alongside a short preview of the target stride.</figcaption>
+        <p class="loop-feedback"><span><span aria-hidden="true">↶</span> The new body state goes back to the controller.</span></p>
+        <figcaption id="loop-detail" role="status">The network reads joint motion, muscle state, foot contact, and a short preview of the target stride.</figcaption>
       </figure>
-      <h3>What happened before you clicked Start</h3>
+      <h3>Reinforcement learning</h3>
       <ol class="training-steps">
-        <li><strong>Set a target</strong><p>A walking cycle fitted from <a href="https://doi.org/10.6084/m9.figshare.27677016.v1">Gait120 motion capture</a> gives the controller a human movement to aim for.</p></li>
-        <li><strong>Try it in physics</strong><p>Run many simulated walks. A reward scores how closely the motion follows the target. Motion capture supplies the goal; it does not supply the 700 commands.</p></li>
-        <li><strong>Improve the policy</strong><p><a href="https://arxiv.org/abs/1707.06347">Proximal policy optimization</a> (PPO) uses those trials to update the network toward choices that earned higher rewards over time.</p></li>
+        <li><strong>Set a target</strong><p>We fitted a stride from <a href="https://doi.org/10.6084/m9.figshare.27677016.v1">Gait120 motion capture</a> to the simulated body.</p></li>
+        <li><strong>Run walking trials</strong><p>The network tried different muscle commands. It earned a higher reward for walking closer to the reference stride.</p></li>
+        <li><strong>Update the network</strong><p>We used <a href="https://arxiv.org/abs/1707.06347">proximal policy optimization</a> (PPO) to update the network based on the rewards it earned.</p></li>
       </ol>
-      <p class="reading-note">A recorded animation would play the same next frame after a push. The policy instead sees a different body state and can choose different muscle commands. Your browser runs that trained policy with its weights fixed.</p>
+      <p class="reading-note">The network is already trained. When you push the walker, it can react to the change in balance without retraining.</p>
     </section>
 
     <section class="chapter" id="replay" aria-labelledby="replay-heading">
-      <h2 id="replay-heading">What changes after a push?</h2>
-      <p class="lede">These two recorded walks begin from the same state, with the same controller. One receives a brief sideways push. Jump to the push, then switch between runs at the same instant to compare the feet, the path and the speed.</p>
+      <h2 id="replay-heading">Walking with and without a push</h2>
+      <p class="lede">Both runs start from the same state and use the same controller. One gets a sideways push. Use <strong>Jump to push</strong>, then switch between runs to compare the same moment.</p>
       <div class="replay-card">
         <div class="replay-stage">
           <div class="replay-top">
@@ -169,7 +169,7 @@
           </div>
         </div>
         <div class="trace">
-          <div class="trace-head"><h3>Read the response</h3><span class="trace-meta" id="trace-meta">Loading trace…</span></div>
+          <div class="trace-head"><h3>Measurements</h3><span class="trace-meta" id="trace-meta">Loading trace…</span></div>
           <div class="segments trace-options" role="group" aria-label="Measurement to plot">
             <button data-metric="0" aria-pressed="true">Sideways drift</button>
             <button data-metric="1" aria-pressed="false">Forward speed</button>
@@ -180,36 +180,35 @@
             <div><dt><i class="swatch steady"></i> No push</dt><dd id="steady-reading">—</dd></div>
             <div><dt><i class="swatch pushed"></i> Sideways push</dt><dd id="push-reading">—</dd></div>
           </dl>
-          <p class="trace-note" id="trace-note">Offset from the starting line. The shaded band marks when the force was applied.</p>
+          <p class="trace-note" id="trace-note">Distance to either side of the starting line. The shaded band marks the push.</p>
           <p class="trace-note" id="replay-error" role="status" hidden></p>
         </div>
       </div>
-      <p class="reading-note">One paired trial shows what happened in this setup. Robustness would take many trials with different directions, timings and strengths.</p>
+      <p class="reading-note">This is one push at one point in the stride. To test recovery, repeat the trial and vary the direction, timing, and strength of the push.</p>
     </section>
 
     <section class="chapter" id="research" aria-labelledby="research-heading">
-      <h2 id="research-heading">What could we learn from a simulated walker?</h2>
-      <p class="lede">A simulation lets researchers change one condition, keep the others fixed and watch how the body responds. In our <a href="https://link.springer.com/article/10.1186/s12984-021-00919-y">review of reinforcement learning for human locomotion (Song et al., 2021)</a>, we describe how the Learn to Move challenge used this idea to test changes in speed, turns and transitions to standing.</p>
+      <h2 id="research-heading">Research applications</h2>
+      <p class="lede">In the Learn to Move challenge, we tested whether controllers could make a simulated walker change speed, turn, and stop. We describe those experiments in <a href="https://link.springer.com/article/10.1186/s12984-021-00919-y">our 2021 review of reinforcement learning for locomotion</a>.</p>
       <ul class="applications" role="list">
         <li>
           <img src="./explainer/application-assistance.svg" width="260" height="138" alt="An ankle brace with a powered hinge. A curved arrow shows where it helps turn the ankle." loading="lazy" decoding="async">
-          <div><h3>Assistive devices</h3><p>Try different amounts and timings of ankle assistance before building a prototype. Does a design reduce the model’s calf effort or shift the work to the knee and hip?</p></div>
+          <div><h3>Assistive devices</h3><p>Simulate a brace that helps at push-off. Check whether it takes work off the calf or shifts it to the knee and hip.</p></div>
         </li>
         <li>
           <img src="./explainer/application-rehab.svg" width="260" height="138" alt="Two simulated lower legs, one with baseline calf strength and one with reduced calf strength." loading="lazy" decoding="async">
-          <div><h3>Rehabilitation research</h3><p>Change the strength of one muscle group and study how the model compensates. The result can suggest which motions or muscle activity to measure in a human study.</p></div>
+          <div><h3>Rehabilitation research</h3><p>Reduce calf strength in the model and see how its gait changes. That can help researchers decide what to measure in a study with people.</p></div>
         </li>
         <li>
           <img src="./explainer/application-robotics.svg" width="260" height="138" alt="A push on a two-legged robot. A dashed footprint marks a possible place for its next step." loading="lazy" decoding="async">
-          <div><h3>Legged robotics</h3><p>Use the same feedback ideas to study how a robot might place its next foot after a disturbance. The robot would need a controller trained for its own sensors, motors and body.</p></div>
+          <div><h3>Legged robotics</h3><p>Study where a robot should place its next foot after a push. The controller would need to be trained for the robot’s own body.</p></div>
         </li>
       </ul>
-      <p class="reading-note">This demo shows one model on level ground. Testing human predictions would require independent measurements such as motion capture, ground reaction forces and EMG.</p>
+      <p class="reading-note">The demo uses one model on level ground. To check its predictions against real walking, researchers would need motion capture, ground forces, and recordings of muscle activity.</p>
     </section>
 
     <section class="chapter resources" id="resources" aria-labelledby="resources-heading">
-      <h2 id="resources-heading">Resources behind the demo</h2>
-      <p class="lede">Follow the tools, data, and research that make the walker possible.</p>
+      <h2 id="resources-heading">Tools, data, and references</h2>
       <ul class="resource-list" role="list">
         <li>
           <a class="resource-link" href="https://mujoco.org/">
@@ -217,7 +216,7 @@
             <div class="resource-copy">
               <span class="resource-type">Physics engine</span>
               <h3>MuJoCo</h3>
-              <p>Computes muscle forces, gravity, and contact with the ground.</p>
+              <p>Simulates muscle forces, gravity, and ground contact.</p>
             </div>
             <span class="resource-arrow" aria-hidden="true">↗</span>
           </a>
@@ -228,7 +227,7 @@
             <div class="resource-copy">
               <span class="resource-type">Musculoskeletal model</span>
               <h3>MS-Human-700</h3>
-              <p>Provides the simulated body and its 700 muscle actuators.</p>
+              <p>The simulated body with 700 muscle actuators.</p>
             </div>
             <span class="resource-arrow" aria-hidden="true">↗</span>
           </a>
@@ -239,7 +238,7 @@
             <div class="resource-copy">
               <span class="resource-type">Training framework</span>
               <h3>MuscleMimic</h3>
-              <p>Provides the training code we adapted to learn the walking controller.</p>
+              <p>The code we adapted to train the controller.</p>
             </div>
             <span class="resource-arrow" aria-hidden="true">↗</span>
           </a>
@@ -250,7 +249,7 @@
             <div class="resource-copy">
               <span class="resource-type">Motion capture</span>
               <h3>Gait120</h3>
-              <p>Supplies the human walking recordings used to fit the reference stride.</p>
+              <p>Human walking recordings used to fit the reference stride.</p>
             </div>
             <span class="resource-arrow" aria-hidden="true">↗</span>
           </a>
@@ -261,7 +260,7 @@
             <div class="resource-copy">
               <span class="resource-type">Anatomy atlas</span>
               <h3>BodyParts3D</h3>
-              <p>Supplies the bone and muscle surfaces fitted to the simulated body.</p>
+              <p>The bone and muscle meshes shown in the viewer.</p>
             </div>
             <span class="resource-arrow" aria-hidden="true">↗</span>
           </a>
@@ -270,7 +269,7 @@
           <a class="resource-link" href="https://onnxruntime.ai/docs/get-started/with-javascript/web.html">
             <svg class="resource-mark" viewBox="0 0 64 64" width="56" height="56" aria-hidden="true" focusable="false"><use href="./explainer/resource-icons.svg#browser"></use></svg>
             <div class="resource-copy">
-              <span class="resource-type">On-device inference</span>
+              <span class="resource-type">Browser runtime</span>
               <h3>ONNX Runtime Web</h3>
               <p>Runs the trained neural network in your browser.</p>
             </div>
@@ -281,14 +280,14 @@
       <dl class="resource-notes">
         <div><dt>Browser graphics</dt><dd><a href="https://threejs.org/">Three.js</a></dd></div>
         <div><dt>Training</dt><dd><a href="https://docs.jax.dev/">JAX</a> · <a href="https://arxiv.org/abs/1707.06347">PPO algorithm</a></dd></div>
-        <div><dt>Model lineage</dt><dd><a href="https://github.com/CEINMS-RT/UpperLimbModel#license">MoBL-ARMS</a></dd></div>
+        <div><dt>Arm model</dt><dd><a href="https://github.com/CEINMS-RT/UpperLimbModel#license">MoBL-ARMS</a></dd></div>
         <div><dt>Related research</dt><dd><a href="https://link.springer.com/article/10.1186/s12984-021-00919-y">Song et al., 2021</a> · <a href="https://lnsgroup.cc/research/MS-Emulator/">MS-Emulator</a></dd></div>
       </dl>
     </section>
 
     <footer class="walk-credits">
       <p>Noncommercial research demo · <a href="./SOURCES.md">Sources and licenses</a></p>
-      <p>Anatomy adapted from BodyParts3D, © The Database Center for Life Science, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Activation is mapped for <span id="coverage">a subset of</span> modeled actuators.</p>
+      <p>Anatomy adapted from BodyParts3D, © The Database Center for Life Science, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. The color overlay covers <span id="coverage">some</span> muscle actuators.</p>
     </footer>
   </main>
 </body>
