@@ -1,4 +1,4 @@
-import { addBallBody, BallThrows } from './ball.js?v=1';
+import { addBallBody, BallThrows } from './ball.js?v=2';
 
 // Browser implementation of the checkpoint's observation and control contract.
 export async function compressedBuffer(response) {

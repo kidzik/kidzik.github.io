@@ -1,4 +1,4 @@
-import { WalkingSimulation } from './simulation.js?v=4';
+import { WalkingSimulation } from './simulation.js?v=5';
 
 let simulation;
 let loading = false;
@@ -136,7 +136,7 @@ async function tick() {
     await simulation.step();
     const duration = performance.now() - start;
     averageMs = averageMs ? .92*averageMs + .08*duration : duration;
-    if (simulation.frame % 2 === 0 || simulation.done) publish();
+    if (simulation.ball?.activeUntil || simulation.frame % 2 === 0 || simulation.done) publish();
     deadline = Math.max(deadline + 1000*simulation.manifest.dt, performance.now()-30);
   } catch (error) {
     paused = true;

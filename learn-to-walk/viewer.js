@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from './vendor/OrbitControls.js';
-import { compressedBuffer } from './simulation.js?v=4';
-import { BALL_RADIUS } from './ball.js?v=1';
+import { compressedBuffer } from './simulation.js?v=5';
+import { BALL_RADIUS } from './ball.js?v=2';
 
 const byId = id => document.getElementById(id);
 const stage = byId('stage');
@@ -211,6 +211,7 @@ async function createViewer() {
     blendDuration = Math.min(100, Math.max(20, time-blendStart));
     blendStart = time;
     current = frame;
+    dirty = true;
     ballStatus.hidden = !ballToggle.checked || !frame.ball;
     updatePalette();
   }
@@ -356,7 +357,7 @@ function connect(setSnapshot) {
     phase('Preparing the download…');
     note.textContent = '';
     try {
-      worker = new Worker(new URL('physics-worker.js?v=5', import.meta.url), { type: 'module' });
+      worker = new Worker(new URL('physics-worker.js?v=6', import.meta.url), { type: 'module' });
     } catch (error) {
       fail(error.message);
       return;
