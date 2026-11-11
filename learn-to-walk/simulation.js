@@ -99,7 +99,7 @@ export class WalkingSimulation {
     ]);
     ort.env.wasm.numThreads = 1;
     ort.env.wasm.wasmPaths = vendor.href;
-    ort.env.wasm.initTimeout = 30_000;
+    ort.env.wasm.initTimeout = 180_000;
     progress('Starting the physics engine…');
     const mujoco = await loadMujoco({ locateFile: name => new URL(name, vendor).href });
     progress('Compiling the musculoskeletal model…');

@@ -1,6 +1,7 @@
-import { compressedBuffer, WalkingSimulation } from './simulation.js?v=2';
+import { WalkingSimulation } from './simulation.js?v=3';
 
 let simulation;
+let loading = false;
 let paused = true;
 let scheduled = false;
 let pendingReset = false;
@@ -15,28 +16,64 @@ async function checked(name) {
 }
 
 async function initialize(preferredBackend) {
-  postMessage({ type: 'progress', text: 'Loading the walking policy and physics…' });
-  const manifest = await checked('manifest.json?v=2').then(response => response.json());
-  const loadActor = async () => {
+  postMessage({ type: 'progress', text: 'Preparing the download…' });
+  const manifest = await checked('manifest.json?v=3').then(response => response.json());
+  const names = ['model.xml', 'physics.bin.gz', 'reference.bin.gz', ...manifest.actorParts.map(([name]) => name)];
+  const total = names.every(name => Number.isSafeInteger(manifest.downloadBytes?.[name]))
+    ? names.reduce((sum, name) => sum + manifest.downloadBytes[name], 0) : 0;
+  let downloaded = 0;
+  let lastProgress = -Infinity;
+  function reportDownload(force = false) {
+    const now = performance.now();
+    if (!force && now - lastProgress < 125) return;
+    lastProgress = now;
+    postMessage({ type: 'download', downloaded, total });
+  }
+  async function download(name, gzip = false) {
+    const response = await checked(name);
+    const measured = response.body.pipeThrough(new TransformStream({
+      transform(chunk, controller) {
+        downloaded += chunk.byteLength;
+        reportDownload();
+        controller.enqueue(chunk);
+      },
+    }));
+    return gzip ? measured.pipeThrough(new DecompressionStream('gzip')) : measured;
+  }
+  async function loadActor() {
     const weights = new Uint8Array(manifest.actorParts.reduce((sum, [, length]) => sum + length, 0));
     let offset = 0;
-    await Promise.all(manifest.actorParts.map(async ([name, length]) => {
-      const start = offset;
-      offset += length;
-      const part = new Uint8Array(await checked(name).then(compressedBuffer));
-      if (part.length !== length) throw new Error(`Size mismatch in ${name}.`);
-      weights.set(part, start);
-    }));
+    // Stream each chunk into the final buffer. Keeping one chunk in flight limits memory on phones.
+    for (const [name, length] of manifest.actorParts) {
+      const reader = (await download(name, true)).getReader();
+      const end = offset + length;
+      try {
+        for (;;) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          if (offset + value.length > end) throw new Error(`Size mismatch in ${name}.`);
+          weights.set(value, offset);
+          offset += value.length;
+        }
+        if (offset !== end) throw new Error(`Size mismatch in ${name}.`);
+      } finally {
+        reader.releaseLock();
+      }
+    }
     return weights;
-  };
+  }
+  reportDownload(true);
   const [xml, physics, references, actorWeights] = await Promise.all([
-    checked('model.xml').then(response => response.text()),
-    checked('physics.bin.gz').then(compressedBuffer),
-    checked('reference.bin.gz').then(compressedBuffer),
+    download('model.xml').then(stream => new Response(stream).text()),
+    download('physics.bin.gz', true).then(stream => new Response(stream).arrayBuffer()),
+    download('reference.bin.gz', true).then(stream => new Response(stream).arrayBuffer()),
     loadActor(),
   ]);
+  reportDownload(true);
+  const progress = text => postMessage({ type: 'progress', text });
+  progress('Loading the simulation engine…');
   const assets = { manifest, xml, physics, references, actorWeights,
-    vendor: new URL('./vendor/', import.meta.url), progress: text => postMessage({ type: 'progress', text }) };
+    vendor: new URL('./vendor/', import.meta.url), progress };
   const useGpu = preferredBackend !== 'wasm' && !!(await navigator.gpu?.requestAdapter().catch(() => null));
   if (useGpu) {
     try {
@@ -52,7 +89,10 @@ async function initialize(preferredBackend) {
       }
     }
   }
-  simulation ??= await WalkingSimulation.create(assets);
+  if (!simulation) {
+    simulation = await WalkingSimulation.create(assets);
+    await simulation.meanAction();
+  }
   postMessage({ type: 'ready', backend: simulation.backend, steps: manifest.checkpointSteps });
   paused = false;
   deadline = performance.now();
@@ -106,7 +146,8 @@ async function tick() {
 }
 
 self.onmessage = ({ data }) => {
-  if (data.type === 'start' && !simulation) {
+  if (data.type === 'start' && !simulation && !loading) {
+    loading = true;
     initialize(data.backend).catch(error => postMessage({ type: 'error', message: error.message }));
   } else if (data.type === 'pause') {
     paused = data.paused;

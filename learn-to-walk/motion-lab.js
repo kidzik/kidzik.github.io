@@ -253,7 +253,9 @@ for (const button of document.querySelectorAll('[data-metric]')) {
   });
 }
 
-if ('ResizeObserver' in window) new ResizeObserver(drawChart).observe(canvas);
+if ('ResizeObserver' in window) {
+  new ResizeObserver(() => requestAnimationFrame(drawChart)).observe(canvas.parentElement);
+}
 canvas.addEventListener('pointerdown', event => {
   const box = canvas.getBoundingClientRect();
   if (data) seek(clamp((event.clientX - box.left - 44) / (box.width - 58), 0, 1) * duration);

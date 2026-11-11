@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from './vendor/OrbitControls.js';
-import { compressedBuffer } from './simulation.js?v=2';
+import { compressedBuffer } from './simulation.js?v=3';
 
 const byId = id => document.getElementById(id);
 const stage = byId('stage');
@@ -8,6 +8,8 @@ const status = byId('run-status');
 const note = byId('status-note');
 const muscleToggle = byId('muscles');
 const activationToggle = byId('activation');
+const touchDevice = /Android|iPhone|iPad|iPod/.test(navigator.userAgent)
+  || (navigator.maxTouchPoints > 0 && (matchMedia('(pointer: coarse)').matches || navigator.platform === 'MacIntel'));
 const views = {
   front: [0.05, -3.3, 1.4],
   side: [3.3, -.05, 1.4],
@@ -100,8 +102,8 @@ async function createViewer() {
     }),
     fetch(new URL('anatomy.bin.gz', import.meta.url)).then(compressedBuffer),
   ]);
-  const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
+  const renderer = new THREE.WebGLRenderer({ antialias: !touchDevice, powerPreference: touchDevice ? 'low-power' : 'high-performance' });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, touchDevice ? 1.35 : 1.75));
   stage.prepend(renderer.domElement);
   renderer.domElement.setAttribute('aria-label', 'Rotatable anatomical walking model');
   const scene = new THREE.Scene();
@@ -194,15 +196,19 @@ async function createViewer() {
     updatePalette();
   }
 
+  let stageWidth = 0;
+  let stageHeight = 0;
   function resize() {
     const { clientWidth: width, clientHeight: height } = stage;
-    if (!width || !height) return;
+    if (!width || !height || (width === stageWidth && height === stageHeight)) return;
+    stageWidth = width;
+    stageHeight = height;
     camera.aspect = width/height;
     camera.updateProjectionMatrix();
     renderer.setSize(width, height, false);
     dirty = true;
   }
-  new ResizeObserver(resize).observe(stage);
+  new ResizeObserver(() => requestAnimationFrame(resize)).observe(stage);
   resize();
   updatePalette();
 
@@ -232,12 +238,68 @@ async function createViewer() {
   return setSnapshot;
 }
 
+function connectFullscreen() {
+  const viewer = byId('walking-viewer');
+  const dialog = byId('viewer-dialog');
+  const button = byId('full-screen');
+  function update() {
+    const expanded = document.fullscreenElement === viewer || dialog.open;
+    button.textContent = expanded ? 'Exit full screen' : 'Full screen';
+    button.setAttribute('aria-pressed', String(expanded));
+  }
+  if (!viewer.requestFullscreen && !dialog.showModal) return;
+  button.hidden = false;
+  update();
+  document.addEventListener('fullscreenchange', update);
+  dialog.addEventListener('close', () => {
+    dialog.before(viewer);
+    update();
+    button.focus({ preventScroll: true });
+  });
+  button.addEventListener('click', async () => {
+    if (dialog.open) {
+      dialog.close();
+      return;
+    }
+    if (document.fullscreenElement === viewer) {
+      await document.exitFullscreen();
+      return;
+    }
+    if (viewer.requestFullscreen) {
+      try {
+        await viewer.requestFullscreen();
+        return;
+      } catch {
+        // Some phone browsers only allow native fullscreen for videos.
+      }
+    }
+    if (dialog.showModal) {
+      dialog.append(viewer);
+      dialog.showModal();
+      update();
+      button.focus({ preventScroll: true });
+    }
+  });
+}
+
 function connect(setSnapshot) {
   const start = byId('start');
   const pause = byId('pause');
   const reset = byId('reset-walk');
   const push = byId('push');
   const controls = [pause, reset, push];
+  const startNote = byId('start-note');
+  const loadingPanel = byId('load-progress');
+  const meter = byId('download-meter');
+  const details = byId('download-details');
+  const mb = bytes => (bytes / 1e6).toFixed(1);
+  function phase(text) {
+    status.textContent = text;
+    details.textContent = text;
+    meter.removeAttribute('value');
+    meter.removeAttribute('aria-valuetext');
+    meter.setAttribute('aria-label', 'Simulation setup');
+  }
   let worker;
   let paused = false;
   let checkpoint;
@@ -251,20 +313,43 @@ function connect(setSnapshot) {
     worker?.terminate();
     worker = undefined;
     start.disabled = false;
+    start.hidden = false;
     start.textContent = 'Try again';
-    byId('start-note').textContent = '';
+    loadingPanel.hidden = true;
+    startNote.textContent = message;
+    startNote.hidden = false;
     byId('start-panel').hidden = false;
   }
 
   start.addEventListener('click', () => {
     if (worker) return;
     start.disabled = true;
-    start.textContent = 'Loading simulation…';
+    start.hidden = true;
+    startNote.hidden = true;
+    loadingPanel.hidden = false;
+    phase('Preparing the download…');
     note.textContent = '';
-    worker = new Worker(new URL('physics-worker.js?v=2', import.meta.url), { type: 'module' });
+    try {
+      worker = new Worker(new URL('physics-worker.js?v=3', import.meta.url), { type: 'module' });
+    } catch (error) {
+      fail(error.message);
+      return;
+    }
     worker.onerror = event => fail(event.message || 'The physics worker stopped unexpectedly.');
     worker.onmessage = ({ data }) => {
-      if (data.type === 'progress') status.textContent = data.text;
+      if (data.type === 'progress') phase(data.text);
+      if (data.type === 'download') {
+        if (status.textContent !== 'Downloading the model…') status.textContent = 'Downloading the model…';
+        const size = data.total ? `${mb(data.downloaded)} / ${mb(data.total)} MB`
+          : `${mb(data.downloaded)} MB downloaded`;
+        details.textContent = size;
+        meter.setAttribute('aria-label', 'Model download progress');
+        if (data.total) {
+          meter.max = data.total;
+          meter.value = data.downloaded;
+          meter.setAttribute('aria-valuetext', size);
+        }
+      }
       if (data.type === 'error') fail(data.message);
       if (data.type === 'ready') {
         checkpoint = data.steps;
@@ -272,6 +357,7 @@ function connect(setSnapshot) {
         paused = false;
         pause.textContent = 'Pause';
         status.textContent = 'Running on this device';
+        loadingPanel.hidden = true;
         byId('start-panel').hidden = true;
         for (const button of controls) button.disabled = false;
       }
@@ -292,7 +378,8 @@ function connect(setSnapshot) {
         }
       }
     };
-    worker.postMessage({ type: 'start', backend: new URL(location.href).searchParams.get('backend') });
+    const requested = new URL(location.href).searchParams.get('backend');
+    worker.postMessage({ type: 'start', backend: requested || (touchDevice ? 'wasm' : null) });
   });
 
   pause.addEventListener('click', () => {
@@ -305,6 +392,7 @@ function connect(setSnapshot) {
   push.addEventListener('click', () => worker?.postMessage({ type: 'push' }));
 }
 
+connectFullscreen();
 createViewer().then(async setSnapshot => {
   if (stage.dataset.previewPose) {
     try {

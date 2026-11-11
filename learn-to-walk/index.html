@@ -9,10 +9,10 @@
   <link rel="canonical" href="https://kidzinski.com/learn-to-walk/">
   <link rel="icon" href="../favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../css/site.css?v=2">
-  <link rel="stylesheet" href="./motion-lab.css?v=4">
+  <link rel="stylesheet" href="./motion-lab.css?v=5">
   <script type="importmap">{"imports":{"three":"./vendor/three.module.min.js"}}</script>
-  <script type="module" src="./viewer.js?v=3"></script>
-  <script type="module" src="./motion-lab.js?v=2"></script>
+  <script type="module" src="./viewer.js?v=4"></script>
+  <script type="module" src="./motion-lab.js?v=3"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -37,12 +37,16 @@
     </header>
 
     <section id="live" aria-label="Live walking simulation">
-      <div class="viewer">
+      <div class="viewer" id="walking-viewer">
         <div class="stage" id="stage" data-preview-pose="./media/preview-pose.json">
           <div class="stage-label" id="run-status" role="status">Loading anatomy…</div>
           <div class="start" id="start-panel" hidden>
             <button id="start" class="primary">Start walking</button>
-            <small id="start-note">Runs on this device · about 160–180 MB to load</small>
+            <small id="start-note">Runs on this device · up to about 180 MB to load</small>
+            <div class="load-progress" id="load-progress" hidden>
+              <progress id="download-meter" aria-label="Model download progress"></progress>
+              <small id="download-details"></small>
+            </div>
           </div>
           <div class="stage-controls">
             <button id="pause" disabled>Pause</button>
@@ -58,8 +62,10 @@
             <label><input type="checkbox" id="muscles" checked> Muscles</label>
             <label><input type="checkbox" id="activation" checked> Activation</label>
           </div>
+          <button type="button" id="full-screen" aria-controls="walking-viewer" hidden>Full screen</button>
         </div>
       </div>
+      <dialog class="viewer-dialog" id="viewer-dialog" aria-label="Full screen walking simulation"></dialog>
       <div class="under-viewer">
         <p>Drag to orbit · Scroll or pinch to zoom</p>
         <p class="legend"><span aria-hidden="true"></span> Low to high activation</p>
