@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from './vendor/OrbitControls.js';
-import { compressedBuffer } from './simulation.js?v=5';
-import { BALL_RADIUS } from './ball.js?v=2';
+import { compressedBuffer } from './simulation.js?v=7';
+import { BALL_RADIUS } from './ball.js?v=3';
 
 const byId = id => document.getElementById(id);
 const stage = byId('stage');
@@ -315,6 +315,14 @@ function connect(setSnapshot) {
   const reset = byId('reset-walk');
   const push = byId('push');
   const controls = [pause, reset, push];
+  const speedControl = byId('speed-control');
+  const targetSpeed = byId('target-speed');
+  const speedValue = byId('target-speed-value');
+  function showTarget(value) {
+    const text = `${Number(value).toFixed(2)} m/s`;
+    speedValue.textContent = text;
+    targetSpeed.setAttribute('aria-valuetext', text);
+  }
   const startNote = byId('start-note');
   const loadingPanel = byId('load-progress');
   const meter = byId('download-meter');
@@ -337,6 +345,8 @@ function connect(setSnapshot) {
     status.textContent = 'Simulation unavailable';
     note.textContent = message;
     for (const button of controls) button.disabled = true;
+    targetSpeed.disabled = true;
+    speedControl.hidden = true;
     worker?.terminate();
     worker = undefined;
     start.disabled = false;
@@ -357,7 +367,7 @@ function connect(setSnapshot) {
     phase('Preparing the download…');
     note.textContent = '';
     try {
-      worker = new Worker(new URL('physics-worker.js?v=6', import.meta.url), { type: 'module' });
+      worker = new Worker(new URL('physics-worker.js?v=8', import.meta.url), { type: 'module' });
     } catch (error) {
       fail(error.message);
       return;
@@ -387,6 +397,14 @@ function connect(setSnapshot) {
         loadingPanel.hidden = true;
         byId('start-panel').hidden = true;
         for (const button of controls) button.disabled = false;
+        if (data.speed) {
+          targetSpeed.min = data.speed.minimum;
+          targetSpeed.max = data.speed.maximum;
+          targetSpeed.value = data.speed.natural;
+          showTarget(targetSpeed.value);
+          targetSpeed.disabled = false;
+          speedControl.hidden = false;
+        }
       }
       if (data.type === 'frame') {
         setSnapshot(data);
@@ -419,6 +437,10 @@ function connect(setSnapshot) {
   });
   reset.addEventListener('click', () => worker?.postMessage({ type: 'reset' }));
   push.addEventListener('click', () => worker?.postMessage({ type: 'push' }));
+  targetSpeed.addEventListener('input', () => {
+    showTarget(targetSpeed.value);
+    worker?.postMessage({ type: 'target-speed', value: targetSpeed.valueAsNumber });
+  });
   ballToggle.addEventListener('change', () => worker?.postMessage({ type: 'ball-throws', enabled: ballToggle.checked }));
 }
 

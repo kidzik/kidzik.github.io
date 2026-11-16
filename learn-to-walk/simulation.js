@@ -1,4 +1,4 @@
-import { addBallBody, BallThrows } from './ball.js?v=2';
+import { addBallBody, BallThrows } from './ball.js?v=3';
 
 // Browser implementation of the checkpoint's observation and control contract.
 export async function compressedBuffer(response) {
@@ -43,14 +43,7 @@ function rotationVector(m) {
   return [x*scale, y*scale, z*scale];
 }
 
-export function buildObservation(state, schema, reference, output = new Float32Array(schema.size)) {
-  for (const [field, [source, destination]] of Object.entries(schema.blocks)) {
-    const values = state[field];
-    for (let i = 0; i < source.length; i++) output[destination[i]] = values[source[i]];
-  }
-
-  const { sites, siteBodies, siteRoots, goalOffset, liveGoalSize } = schema;
-  const count = sites.length - 1;
+function writeSites(state, { sites, siteBodies, siteRoots }, output, position, angle, speed) {
   const positions = state.site_xpos;
   const matrices = state.site_xmat;
   const origin = 3*sites[0], rootMatrix = 9*sites[0];
@@ -59,9 +52,9 @@ export function buildObservation(state, schema, reference, output = new Float32A
   for (let i = 1; i < sites.length; i++) {
     const site = sites[i];
     const point = 3*site, matrix = 9*site;
-    const posOutput = goalOffset + 3*(i-1);
-    const angleOutput = posOutput + 3*count;
-    const velOutput = goalOffset + 6*count + 6*(i-1);
+    const posOutput = position + 3*(i-1);
+    const angleOutput = angle + 3*(i-1);
+    const velOutput = speed + 6*(i-1);
     const velocity = siteVelocity(state, site, siteBodies[i], siteRoots[i]);
     for (let row = 0; row < 3; row++) {
       output[posOutput + row] = positions[point+row] - positions[origin+row];
@@ -80,8 +73,153 @@ export function buildObservation(state, schema, reference, output = new Float32A
         + matrices[rootMatrix+3*row+2] * (rootVelocity[5]-velocity[5]);
     }
   }
-  output.set(reference.subarray(0, schema.referenceSize), goalOffset + liveGoalSize);
+}
+
+export function buildObservation(state, schema, reference, output = new Float32Array(schema.size)) {
+  for (const [field, [source, destination]] of Object.entries(schema.blocks)) {
+    const values = state[field];
+    for (let i = 0; i < source.length; i++) output[destination[i]] = values[source[i]];
+  }
+  const { goalOffset, liveGoalSize } = schema;
+  const size = 3*(schema.sites.length - 1);
+  writeSites(state, schema, output, goalOffset, goalOffset + size, goalOffset + 2*size);
+  if (reference) output.set(reference.subarray(0, schema.referenceSize), goalOffset + liveGoalSize);
   return output;
+}
+
+function speedPreview(speed, target, seconds, acceleration, round = Number) {
+  const difference = Math.fround(target-speed);
+  const slope = Math.fround(acceleration);
+  const duration = round(seconds);
+  const ramp = Math.min(duration, Math.fround(Math.abs(difference)/slope));
+  const endSpeed = round(speed + round(Math.sign(difference)*slope*ramp));
+  const rampDistance = round(round(round(speed + endSpeed)*.5)*ramp);
+  const settledDistance = round(target*round(duration-ramp));
+  return [endSpeed, round(rampDistance + settledDistance)];
+}
+
+function normalize(vector) {
+  const length = Math.hypot(...vector);
+  return vector.map(value => value / length);
+}
+
+function cross(a, b) {
+  return [a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]];
+}
+
+class SpeedCommand {
+  constructor(manifest, references) {
+    const { speedCommand, dt, dimensions, referenceLoop, referenceStride, observation } = manifest;
+    Object.assign(this, { config: speedCommand, dt, references, referenceLoop, referenceStride,
+      referenceFrames: manifest.referenceFrames, observation });
+    const sites = observation.sites.map((_, index) => index);
+    this.siteSchema = { sites, siteBodies: sites, siteRoots: sites };
+    this.row = new Float64Array(referenceStride);
+    let offset = 0;
+    const fields = { qpos: dimensions.nq, qvel: dimensions.nv, subtree_com: 3*sites.length,
+      site_xpos: 3*sites.length, site_xmat: 9*sites.length, cvel: 6*sites.length };
+    this.sample = Object.fromEntries(Object.entries(fields).map(([field, size]) => {
+      const values = this.row.subarray(offset, offset+size);
+      offset += size;
+      return [field, values];
+    }));
+    if (offset !== referenceStride) throw new Error('Speed reference shape mismatch.');
+    this.natural = Math.fround(speedCommand.natural);
+    this.target = this.natural;
+    this.reset();
+  }
+
+  reset() {
+    this.phase = 0;
+    this.speed = this.natural;
+    this.retimed = false;
+  }
+
+  setTarget(target) {
+    if (!Number.isFinite(target)) return;
+    this.target = Math.fround(Math.max(this.config.minimum, Math.min(this.config.maximum, target)));
+  }
+
+  advance(frame) {
+    // Native control updates integrate a Float32 clock. Lookahead uses Float64 time offsets.
+    const round = Math.fround;
+    const [speed, distance] = speedPreview(this.speed, this.target, this.dt, this.config.acceleration, round);
+    const travelledFrames = round(distance/round(this.config.natural*this.dt));
+    this.retimed ||= this.target !== this.natural;
+    this.phase = this.retimed ? round(this.phase + travelledFrames) : frame;
+    this.speed = speed;
+  }
+
+  readReference(phase, rate) {
+    const [start, end] = this.referenceLoop;
+    const cycles = phase < end ? 0 : 1 + Math.floor((phase-end)/(end-start));
+    const stride = this.referenceStride;
+    const index = Math.floor(phase);
+    const fraction = phase-index;
+    const a = (index-cycles*(end-start))*stride;
+    const b = a + stride;
+    const source = this.references;
+    const { qpos, qvel, site_xmat: matrices, cvel } = this.sample;
+    for (let i = 0; i < stride; i++) this.row[i] = source[a+i] + fraction*(source[b+i]-source[a+i]);
+    if (fraction) {
+      let dot = 0;
+      for (let i = 3; i < 7; i++) dot += source[a+i]*source[b+i];
+      if (dot < 0) {
+        for (let i = 3; i < 7; i++) qpos[i] = source[a+i]-fraction*(source[b+i]+source[a+i]);
+      }
+      qpos.set(normalize(qpos.subarray(3, 7)), 3);
+      for (let i = 0; i < matrices.length; i += 9) {
+        const x = normalize([matrices[i], matrices[i+3], matrices[i+6]]);
+        const z = normalize(cross(x, [matrices[i+1], matrices[i+4], matrices[i+7]]));
+        const y = cross(z, x);
+        for (let axis = 0; axis < 3; axis++) matrices.set([x[axis], y[axis], z[axis]], i+3*axis);
+      }
+    }
+    // The pose repeats each stride. The path continues through the scene.
+    for (let i = 0; i < 2; i++) qpos[i] += cycles*(source[end*stride+i]-source[start*stride+i]);
+    for (let i = 0; i < qvel.length; i++) qvel[i] *= rate;
+    for (let i = 0; i < cvel.length; i++) cvel[i] *= rate;
+    return this.sample;
+  }
+
+  write(state, frame, output) {
+    const { natural, target, speed, phase, config } = this;
+    const { lookahead, stride, acceleration, qposIndices, qvelIndices } = config;
+    const { goalOffset, liveGoalSize } = this.observation;
+    const joints = goalOffset + liveGoalSize;
+    const velocities = joints + lookahead*qposIndices.length;
+    const positions = velocities + lookahead*qvelIndices.length;
+    const siteSize = 3*(this.siteSchema.sites.length-1);
+    const angles = positions + lookahead*siteSize;
+    const siteSpeeds = angles + lookahead*siteSize;
+    const motionPhase = siteSpeeds + lookahead*2*siteSize;
+    for (let i = 0; i < lookahead; i++) {
+      const [rate, distance] = speedPreview(speed, target, i*stride*this.dt, acceleration);
+      const future = !this.retimed && target === natural
+        ? frame + i*stride : phase + distance/(config.natural*this.dt);
+      const reference = this.readReference(future, Math.fround(rate/natural));
+      if (i === 0) this.writePath(state, reference, output, motionPhase+1);
+      qposIndices.forEach((id, j) => { output[joints + i*qposIndices.length + j] = reference.qpos[id]; });
+      qvelIndices.forEach((id, j) => { output[velocities + i*qvelIndices.length + j] = reference.qvel[id]; });
+      writeSites(reference, this.siteSchema, output, positions+i*siteSize, angles+i*siteSize, siteSpeeds+i*2*siteSize);
+    }
+    const [start, end] = this.referenceLoop;
+    const nominalFrame = frame < end ? frame : start + (frame-end)%(end-start);
+    output[motionPhase] = nominalFrame/this.referenceFrames;
+  }
+
+  writePath(state, reference, output, offset) {
+    const [, , , w, x, y, z] = reference.qpos;
+    const yaw = Math.atan2(2*(w*z+x*y), 1-2*(y*y+z*z));
+    const cosine = Math.cos(yaw), sine = Math.sin(yaw);
+    const dx = state.qpos[0]-reference.qpos[0]+this.references[0];
+    const dy = state.qpos[1]-reference.qpos[1]+this.references[1];
+    const vx = state.qvel[0]-reference.qvel[0];
+    const vy = state.qvel[1]-reference.qvel[1];
+    const features = [(cosine*dx+sine*dy)/.20, (cosine*vx+sine*vy)/.25,
+      (this.target-this.natural)/.07, (sine*dx-cosine*dy)/.20, (sine*vx-cosine*vy)/.25];
+    features.forEach((value, i) => { output[offset+i] = Math.max(-4, Math.min(4, value)); });
+  }
 }
 
 export class WalkingSimulation {
@@ -90,6 +228,7 @@ export class WalkingSimulation {
     this.observation = new Float32Array(manifest.observation.size);
     this.observationTensor = new ort.Tensor('float32', this.observation, [1, this.observation.length]);
     this.noiseOffset = manifest.referenceFrames * manifest.referenceStride;
+    this.speedCommand = manifest.speedCommand ? new SpeedCommand(manifest, references) : null;
     this.ball = ballSupport ? new BallThrows(model, data, manifest, frame => this.reference(frame)) : null;
     this.reset();
   }
@@ -154,6 +293,7 @@ export class WalkingSimulation {
     mujoco.mj_forward(model, data);
     data.qacc_warmstart.set(manifest.reset.qacc_warmstart);
     this.frame = 0;
+    this.speedCommand?.reset();
     this.pushFrames = 0;
     this.start = [data.qpos[0], data.qpos[1]];
     this.done = null;
@@ -161,6 +301,13 @@ export class WalkingSimulation {
 
   setBallThrows(enabled) {
     this.ball?.setEnabled(enabled, this.frame);
+  }
+
+  observe(state = this.data, output = this.observation) {
+    const command = this.speedCommand;
+    buildObservation(state, this.manifest.observation, command ? null : this.reference(), output);
+    command?.write(state, this.frame, output);
+    return output;
   }
 
   async meanAction(observation = this.observation) {
@@ -173,7 +320,7 @@ export class WalkingSimulation {
   async step() {
     if (this.done) return this.done;
     const { data, manifest, mujoco, model } = this;
-    buildObservation(data, manifest.observation, this.reference(), this.observation);
+    this.observe();
     const t0 = performance.now();
     const mean = await this.meanAction();
     const t1 = performance.now();
@@ -190,6 +337,7 @@ export class WalkingSimulation {
     this.inferenceMs = t1-t0;
     this.physicsMs = performance.now()-t1;
     this.frame++;
+    this.speedCommand?.advance(this.frame);
     this.done = this.endReason();
     return this.done;
   }

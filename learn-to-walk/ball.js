@@ -81,7 +81,7 @@ export class BallThrows {
         || model.jnt_bodyid[joint] !== this.body) {
       throw new Error('The ball changed the walking model state layout.');
     }
-    const offset = manifest.observation.referenceSize;
+    const offset = manifest.observation.referencePositionOffset ?? manifest.observation.referenceSize;
     const first = reference(0), late = reference(140);
     const dx = late[offset] - first[offset], dy = late[offset+1] - first[offset+1];
     const length = Math.hypot(dx, dy);

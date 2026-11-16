@@ -54,6 +54,11 @@ body:has(.viewer-dialog[open]) { overflow: hidden; }
 .view-controls, .display-controls, .legend { display: flex; align-items: center; gap: 6px; }
 .display-controls { flex-wrap: wrap; gap: 6px 14px; font-size: .82rem; }
 .display-controls label { display: flex; align-items: center; gap: 4px; }
+.speed-control { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; padding: 7px 12px 9px; border-top: 1px solid var(--line); font-size: .82rem; }
+.speed-control input { flex: 1 1 120px; max-width: 280px; min-height: 28px; margin: 0; cursor: pointer; }
+.speed-control span { min-width: 8ch; text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+:is(.viewer:fullscreen, .viewer-dialog .viewer) .speed-control { padding-bottom: max(9px, env(safe-area-inset-bottom)); }
+:is(.viewer:fullscreen, .viewer-dialog .viewer):has(.speed-control:not([hidden])) .toolbar { padding-bottom: 9px; }
 .under-viewer, .small-note, figcaption { color: var(--muted); font-size: .82rem; }
 .under-viewer p { margin: 7px 0; }
 .legend span { width: 56px; height: 6px; border-radius: 3px; background: linear-gradient(90deg, #d1a39c, #bd6157, #cc261f, #990609); }

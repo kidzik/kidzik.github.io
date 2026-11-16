@@ -1,4 +1,4 @@
-import { WalkingSimulation } from './simulation.js?v=5';
+import { WalkingSimulation } from './simulation.js?v=7';
 
 let simulation;
 let loading = false;
@@ -6,7 +6,8 @@ let paused = true;
 let scheduled = false;
 let pendingReset = false;
 let pendingPush = false;
-let throwsEnabled = true;
+let pendingTargetSpeed;
+let throwsEnabled = false;
 let deadline = 0;
 let averageMs = 0;
 
@@ -20,6 +21,7 @@ async function initialize(preferredBackend, bundleURL) {
   const bundle = new URL(bundleURL || './', import.meta.url);
   postMessage({ type: 'progress', text: 'Preparing the download…' });
   const manifest = await checked('manifest.json?v=3', bundle).then(response => response.json());
+  const simulationBase = manifest.simulationAssets ? new URL(manifest.simulationAssets, bundle) : import.meta.url;
   const names = ['model.xml', 'physics.bin.gz', 'reference.bin.gz', ...manifest.actorParts.map(([name]) => name)];
   const total = names.every(name => Number.isSafeInteger(manifest.downloadBytes?.[name]))
     ? names.reduce((sum, name) => sum + manifest.downloadBytes[name], 0) : 0;
@@ -66,9 +68,9 @@ async function initialize(preferredBackend, bundleURL) {
   }
   reportDownload(true);
   const [xml, physics, references, actorWeights] = await Promise.all([
-    download('model.xml').then(stream => new Response(stream).text()),
-    download('physics.bin.gz', true).then(stream => new Response(stream).arrayBuffer()),
-    download('reference.bin.gz', true).then(stream => new Response(stream).arrayBuffer()),
+    download('model.xml', false, simulationBase).then(stream => new Response(stream).text()),
+    download('physics.bin.gz', true, simulationBase).then(stream => new Response(stream).arrayBuffer()),
+    download('reference.bin.gz', true, simulationBase).then(stream => new Response(stream).arrayBuffer()),
     loadActor(),
   ]);
   reportDownload(true);
@@ -97,7 +99,9 @@ async function initialize(preferredBackend, bundleURL) {
   }
   simulation.setBallThrows(throwsEnabled);
   loading = false;
-  postMessage({ type: 'ready', backend: simulation.backend, steps: manifest.checkpointSteps });
+  const command = simulation.speedCommand?.config;
+  const speed = command && { minimum: command.minimum, maximum: command.maximum, natural: command.natural };
+  postMessage({ type: 'ready', backend: simulation.backend, steps: manifest.checkpointSteps, speed });
   paused = false;
   deadline = performance.now();
   publish();
@@ -119,6 +123,10 @@ function schedule(delay = 0) {
 async function tick() {
   try {
     const now = performance.now();
+    if (pendingTargetSpeed !== undefined) {
+      simulation.speedCommand?.setTarget(pendingTargetSpeed);
+      pendingTargetSpeed = undefined;
+    }
     if (pendingReset) {
       simulation.reset();
       pendingReset = false;
@@ -152,7 +160,7 @@ async function tick() {
 self.onmessage = ({ data }) => {
   if (data.type === 'start' && !simulation && !loading) {
     loading = true;
-    throwsEnabled = data.throwsEnabled !== false;
+    throwsEnabled = data.throwsEnabled === true;
     initialize(data.backend, data.bundleURL).catch(error => postMessage({ type: 'error', message: error.message }));
   } else if (data.type === 'pause') {
     paused = data.paused;
@@ -171,5 +179,7 @@ self.onmessage = ({ data }) => {
     }
   } else if (data.type === 'push') {
     pendingPush = true;
+  } else if (data.type === 'target-speed') {
+    pendingTargetSpeed = data.value;
   }
 };
