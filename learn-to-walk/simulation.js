@@ -1,4 +1,5 @@
-import { addBallBody, BallThrows } from './ball.js?v=3';
+import { addBallBody, BallThrows } from './ball.js?v=4';
+import { TurnReference, yawOf } from './turn-reference.js?v=1';
 
 // Browser implementation of the checkpoint's observation and control contract.
 export async function compressedBuffer(response) {
@@ -126,6 +127,7 @@ class SpeedCommand {
     if (offset !== referenceStride) throw new Error('Speed reference shape mismatch.');
     this.natural = Math.fround(speedCommand.natural);
     this.target = this.natural;
+    this.turn = manifest.turnCommand && new TurnReference(manifest.turnCommand, speedPreview);
     this.reset();
   }
 
@@ -133,6 +135,7 @@ class SpeedCommand {
     this.phase = 0;
     this.speed = this.natural;
     this.retimed = false;
+    this.turn?.reset();
   }
 
   setTarget(target) {
@@ -145,9 +148,24 @@ class SpeedCommand {
     const round = Math.fround;
     const [speed, distance] = speedPreview(this.speed, this.target, this.dt, this.config.acceleration, round);
     const travelledFrames = round(distance/round(this.config.natural*this.dt));
+    const old = this.turn && this.rootXY(this.phase);
     this.retimed ||= this.target !== this.natural;
     this.phase = this.retimed ? round(this.phase + travelledFrames) : frame;
     this.speed = speed;
+    if (old) {
+      const next = this.rootXY(this.phase);
+      this.turn.advance(this.dt, [next[0]-old[0], next[1]-old[1]]);
+    }
+  }
+
+  rootXY(phase) {
+    const [start, end] = this.referenceLoop;
+    const cycles = phase < end ? 0 : 1 + Math.floor((phase-end)/(end-start));
+    const stride = this.referenceStride, index = Math.floor(phase), fraction = phase-index;
+    const a = (index-cycles*(end-start))*stride;
+    const refs = this.references;
+    return [0, 1].map(i => refs[a+i] + fraction*(refs[a+stride+i]-refs[a+i])
+      + cycles*(refs[end*stride+i]-refs[start*stride+i]));
   }
 
   readReference(phase, rate) {
@@ -176,7 +194,16 @@ class SpeedCommand {
       }
     }
     // The pose repeats each stride. The path continues through the scene.
-    for (let i = 0; i < 2; i++) qpos[i] += cycles*(source[end*stride+i]-source[start*stride+i]);
+    for (let i = 0; i < 2; i++) {
+      const shift = cycles*(source[end*stride+i]-source[start*stride+i]);
+      qpos[i] += shift;
+      if (this.turn) {
+        for (let site = i; site < this.sample.site_xpos.length; site += 3) {
+          this.sample.site_xpos[site] += shift;
+          this.sample.subtree_com[site] += shift;
+        }
+      }
+    }
     for (let i = 0; i < qvel.length; i++) qvel[i] *= rate;
     for (let i = 0; i < cvel.length; i++) cvel[i] *= rate;
     return this.sample;
@@ -193,12 +220,18 @@ class SpeedCommand {
     const angles = positions + lookahead*siteSize;
     const siteSpeeds = angles + lookahead*siteSize;
     const motionPhase = siteSpeeds + lookahead*2*siteSize;
+    const xy = this.turn && this.rootXY(phase);
     for (let i = 0; i < lookahead; i++) {
-      const [rate, distance] = speedPreview(speed, target, i*stride*this.dt, acceleration);
+      const ahead = i*stride*this.dt;
+      const [rate, distance] = speedPreview(speed, target, ahead, acceleration);
       const future = !this.retimed && target === natural
         ? frame + i*stride : phase + distance/(config.natural*this.dt);
       const reference = this.readReference(future, Math.fround(rate/natural));
-      if (i === 0) this.writePath(state, reference, output, motionPhase+1);
+      this.turn?.apply(reference, xy, ahead);
+      if (i === 0) {
+        this.writePath(state, reference, output, motionPhase+1);
+        this.turn?.write(state, reference, output, motionPhase+6);
+      }
       qposIndices.forEach((id, j) => { output[joints + i*qposIndices.length + j] = reference.qpos[id]; });
       qvelIndices.forEach((id, j) => { output[velocities + i*qvelIndices.length + j] = reference.qvel[id]; });
       writeSites(reference, this.siteSchema, output, positions+i*siteSize, angles+i*siteSize, siteSpeeds+i*2*siteSize);
@@ -296,6 +329,7 @@ export class WalkingSimulation {
     this.speedCommand?.reset();
     this.pushFrames = 0;
     this.start = [data.qpos[0], data.qpos[1]];
+    this.pathLength = 0;
     this.done = null;
   }
 
@@ -330,10 +364,15 @@ export class WalkingSimulation {
       const action = mean[i] + manifest.actionStd[i] * this.references[noise+i];
       ctrl[manifest.actionIndices[i]] = .5 * (1 + Math.max(-1, Math.min(1, action)));
     }
-    data.xfrc_applied[manifest.pelvis*6] = this.pushFrames > 0 ? 40 : 0;
+    const yaw = this.speedCommand?.turn?.yaw ?? 0;
+    const lateralForce = this.pushFrames > 0 ? 40 : 0;
+    data.xfrc_applied[manifest.pelvis*6] = lateralForce*Math.cos(yaw);
+    data.xfrc_applied[manifest.pelvis*6+1] = lateralForce*Math.sin(yaw);
     if (this.pushFrames > 0) this.pushFrames--;
-    this.ball?.advance(this.frame);
+    this.ball?.advance(this.frame, yaw);
+    const x = data.qpos[0], y = data.qpos[1];
     for (let i = 0; i < manifest.substeps; i++) mujoco.mj_step(model, data);
+    this.pathLength += Math.hypot(data.qpos[0]-x, data.qpos[1]-y);
     this.inferenceMs = t1-t0;
     this.physicsMs = performance.now()-t1;
     this.frame++;
@@ -371,6 +410,7 @@ export class WalkingSimulation {
     }
     const seconds = this.frame * manifest.dt;
     const distance = Math.hypot(x-this.start[0], y-this.start[1]);
-    return { bones, groups, x, y, seconds, distance, done: this.done, ball: this.ball?.snapshot(x, y) ?? null };
+    return { bones, groups, x, y, seconds, distance, done: this.done, ball: this.ball?.snapshot(x, y) ?? null,
+      yaw: yawOf(data.qpos), pathLength: this.pathLength };
   }
 }

@@ -1,6 +1,6 @@
 # Learn to walk · sources and licenses
 
-This page is a noncommercial research demonstration by Lukas Kidzinski. The live controller was trained for this project and exported to ONNX from the 431,841,280-step biomechanics checkpoint. This run used balanced joint tracking and small penalties for joint-limit loads, hard landings, muscle activation, and abrupt changes in muscle commands. The push replay and stride images were recorded from this same checkpoint.
+This page is a noncommercial research demonstration by Lukas Kidzinski. The live controller was trained for this project and exported to ONNX from checkpoint 3,469,783,040, which passed four offline steering trials at ±8°/s. The controller follows a walking reference that bends in response to steering commands. The push replay and stride images were recorded separately from the 431,841,280-step biomechanics checkpoint.
 
 - **Simulation body.** [MS-Human-700](https://github.com/LNSGroup/MS-Human-700), LNSGroup, commit `2d686957aefd5739cf4d2859a6acfd94c8f84400`. [Model license](MS-Human-700-LICENSE.txt). The exported model uses an equivalent free-root coordinate, small adjustments to dependent knee joint limits, and four foot load sensors. The browser compiles this modified MuJoCo XML.
 - **Upper-limb sources.** The [MS-Human-700 paper](https://arxiv.org/html/2312.05473v1#S3) cites the OpenSim work of Saul and colleagues. See the [MoBL-ARMS terms and citations](MoBL-ARMS-NOTICE.md), reproduced from the [upstream distribution](https://github.com/CEINMS-RT/UpperLimbModel#license).
@@ -8,7 +8,3 @@ This page is a noncommercial research demonstration by Lukas Kidzinski. The live
 - **Reference motion.** Seungbum Koo, Junyo Boo, Dongwook Seo, and Minseung Kim (2025), [Comprehensive Human Locomotion and Electromyography Dataset: Gait120](https://doi.org/10.6084/m9.figshare.27677016.v1), [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). We averaged the S053 level-walking trials 01–04, independently fitted the markers to MS-Human-700, and repeated the fitted walking cycle. The browser bundle uses the resulting reference features.
 - **Policy and observations.** [MuscleMimic](https://github.com/amathislab/MuscleMimic), [Apache 2.0](MuscleMimic-LICENSE.txt). Browser inference uses the exported actor and a JavaScript implementation of the simulation observations.
 - **Browser runtime.** [MuJoCo 3.8.0](https://github.com/google-deepmind/mujoco/tree/3.8.0), [Apache 2.0](vendor/MuJoCo-LICENSE.txt). [ONNX Runtime Web 1.31.1](https://github.com/microsoft/onnxruntime/tree/v1.31.1), [MIT](vendor/ONNX-Runtime-LICENSE.txt) and [third-party notices](vendor/ONNX-Runtime-ThirdPartyNotices.txt). [Three.js 0.184.0](https://github.com/mrdoob/three.js/tree/r184), [MIT](vendor/three-LICENSE.txt).
-
-## Steering course
-
-The [steering course](steer/) uses a project-trained actor exported from checkpoint 3,469,783,040. That checkpoint passed all four offline steering tests at ±8°/s before publication. This mode uses the same MS-Human-700 body, anatomy and Gait120-derived walking reference, with the reference path curved in response to player commands.

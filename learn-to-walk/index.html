@@ -9,9 +9,9 @@
   <link rel="canonical" href="https://kidzinski.com/learn-to-walk/">
   <link rel="icon" href="../favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../css/site.css?v=2">
-  <link rel="stylesheet" href="./motion-lab.css?v=10">
+  <link rel="stylesheet" href="./motion-lab.css?v=11">
   <script type="importmap">{"imports":{"three":"./vendor/three.module.min.js"}}</script>
-  <script type="module" src="./viewer.js?v=9"></script>
+  <script type="module" src="./viewer.js?v=11"></script>
   <script type="module" src="./motion-lab.js?v=5"></script>
 </head>
 <body>
@@ -34,12 +34,11 @@
       <p class="walk-kicker"><a href="../#research">Selected projects</a> <span aria-hidden="true">/</span> Interactive demo</p>
       <h1>Learn to walk</h1>
       <p>A neural network controls 700 simulated muscles to make this model walk. Turn on <strong>Throw balls</strong> to see how the walker handles a hit.</p>
-      <p><a href="./steer/">Play the steering course →</a></p>
     </header>
 
     <section id="live" aria-label="Live walking simulation">
       <div class="viewer" id="walking-viewer">
-        <div class="stage" id="stage" data-policy="./models/1530880000/" data-preview-pose="./media/431841280/preview-pose.json" style="--live-poster: url('./media/431841280/live-poster.webp')">
+        <div class="stage" id="stage" tabindex="0" aria-label="Walking simulator" data-policy="./models/3469783040/" data-preview-pose="./media/431841280/preview-pose.json" style="--live-poster: url('./media/431841280/live-poster.webp')">
           <div class="stage-label" id="run-status" role="status">Loading anatomy…</div>
           <div class="ball-status" id="ball-status" role="status" hidden>Ball in play</div>
           <div class="start" id="start-panel" hidden>
@@ -58,6 +57,7 @@
         </div>
         <div class="toolbar">
           <div class="view-controls" role="group" aria-label="Camera angles">
+            <button id="follow-view" type="button" aria-pressed="false" hidden>Follow</button>
             <button data-view="front">Front</button><button data-view="side">Side</button><button data-view="back">Back</button>
           </div>
           <div class="display-controls">
@@ -66,6 +66,12 @@
             <label><input type="checkbox" id="ball-throws" autocomplete="off"> Throw balls</label>
           </div>
           <button type="button" id="full-screen" aria-controls="walking-viewer" hidden>Full screen</button>
+        </div>
+        <div class="steering-control" id="steering-control" role="group" aria-label="Steering" hidden>
+          <button type="button" data-steer="1" aria-label="Steer left" disabled>← Left</button>
+          <button type="button" data-steer="-1" aria-label="Steer right" disabled>Right →</button>
+          <span id="steering-direction">Straight</span>
+          <span class="steering-hint">Hold to turn<span class="steering-keys"> · ← / → or A / D</span></span>
         </div>
         <div class="speed-control" id="speed-control" hidden>
           <label for="target-speed">Target forward speed</label>

@@ -117,11 +117,13 @@ export class BallThrows {
     else this.park();
   }
 
-  advance(frame) {
+  advance(frame, yaw = 0) {
     if (this.activeUntil && frame >= this.activeUntil) this.park();
     if (!this.enabled) return;
     const { data, model, body, qpos, qvel, pelvis, forward, throwCount } = this;
-    const [fx, fy] = forward;
+    const [x, y] = forward;
+    const fx = Math.cos(yaw)*x-Math.sin(yaw)*y;
+    const fy = Math.sin(yaw)*x+Math.cos(yaw)*y;
     const speed = data.qvel[0]*fx + data.qvel[1]*fy;
     this.forwardSpeed ??= speed;
     this.forwardSpeed += Math.min(1, this.dt/.35) * (speed-this.forwardSpeed);

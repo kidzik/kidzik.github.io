@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from './vendor/OrbitControls.js';
-import { compressedBuffer } from './simulation.js?v=7';
-import { BALL_RADIUS } from './ball.js?v=3';
+import { compressedBuffer } from './simulation.js?v=9';
+import { BALL_RADIUS } from './ball.js?v=4';
 
 const byId = id => document.getElementById(id);
 const stage = byId('stage');
@@ -120,6 +120,24 @@ async function createViewer() {
   controls.enableDamping = true;
   controls.dampingFactor = .16;
   controls.maxPolarAngle = Math.PI * .88;
+  const followButton = byId('follow-view');
+  const followPosition = new THREE.Vector3();
+  let follow = false;
+  let heading;
+  let initialYaw;
+
+  function setFollow(enabled) {
+    follow = enabled;
+    followButton.setAttribute('aria-pressed', String(enabled));
+    dirty = true;
+  }
+
+  function updateFollow(yaw) {
+    const facing = heading + yaw - initialYaw;
+    followPosition.set(-3.75*Math.cos(facing), -3.75*Math.sin(facing), 1.77);
+    camera.position.lerp(followPosition, .24);
+    controls.target.lerp(followPosition.set(0, 0, .84), .24);
+  }
 
   function setView(position) {
     camera.position.set(...position);
@@ -127,8 +145,10 @@ async function createViewer() {
     controls.update();
   }
   setView([1.85, -3.05, 1.42]);
+  followButton.addEventListener('click', () => setFollow(true));
+  controls.addEventListener('start', () => setFollow(false));
   for (const button of document.querySelectorAll('[data-view]')) {
-    button.addEventListener('click', () => setView(views[button.dataset.view]));
+    button.addEventListener('click', () => { setFollow(false); setView(views[button.dataset.view]); });
   }
 
   scene.add(new THREE.HemisphereLight(0xf7e8d8, 0x6c7484, 1.8));
@@ -211,6 +231,7 @@ async function createViewer() {
     blendDuration = Math.min(100, Math.max(20, time-blendStart));
     blendStart = time;
     current = frame;
+    if (frame.seconds === 0 && Number.isFinite(frame.yaw)) initialYaw = frame.yaw;
     dirty = true;
     ballStatus.hidden = !ballToggle.checked || !frame.ball;
     updatePalette();
@@ -253,6 +274,11 @@ async function createViewer() {
       }
       grid.position.x = -(current.x % .5);
       grid.position.y = -(current.y % .5);
+      if (follow && Number.isFinite(initialYaw)) {
+        const deltaYaw = current.yaw-previous.yaw;
+        const angle = previous.yaw+amount*Math.atan2(Math.sin(deltaYaw), Math.cos(deltaYaw));
+        updateFollow(angle);
+      }
     }
     controls.update();
     if (dirty || (current && amount < 1)) {
@@ -262,7 +288,11 @@ async function createViewer() {
     requestAnimationFrame(draw);
   }
   requestAnimationFrame(draw);
-  return setSnapshot;
+  return { setSnapshot, enableFollow(value) {
+    heading = value;
+    followButton.hidden = false;
+    setFollow(true);
+  } };
 }
 
 function connectFullscreen() {
@@ -309,7 +339,77 @@ function connectFullscreen() {
   });
 }
 
-function connect(setSnapshot) {
+function connectSteering(send) {
+  const viewer = byId('walking-viewer');
+  const row = byId('steering-control');
+  const label = byId('steering-direction');
+  const buttons = [...row.querySelectorAll('[data-steer]')];
+  const directions = { ArrowLeft: 1, KeyA: 1, ArrowRight: -1, KeyD: -1 };
+  const inputs = new Map();
+  let maximum = 0;
+  let enabled = false;
+  let last = 0;
+
+  function update() {
+    const active = [...inputs.values()];
+    const left = active.includes(1), right = active.includes(-1);
+    const direction = Number(left)-Number(right);
+    if (direction === last) return;
+    last = direction;
+    send(direction*maximum);
+    label.textContent = direction > 0 ? 'Left' : direction < 0 ? 'Right' : 'Straight';
+    for (const button of buttons) button.classList.toggle('steering-active', Number(button.dataset.steer) === direction);
+  }
+
+  function clear() {
+    inputs.clear();
+    update();
+  }
+
+  viewer.addEventListener('keydown', event => {
+    if (!enabled || event.ctrlKey || event.altKey || event.metaKey || event.target.closest('input, select, textarea, [contenteditable]')) return;
+    const direction = directions[event.code];
+    if (!direction) return;
+    event.preventDefault();
+    inputs.set(event.code, direction);
+    update();
+  });
+  window.addEventListener('keyup', event => { if (inputs.delete(event.code)) update(); });
+  window.addEventListener('blur', clear);
+  document.addEventListener('visibilitychange', () => { if (document.hidden) clear(); });
+  viewer.addEventListener('focusout', event => { if (!viewer.contains(event.relatedTarget)) clear(); });
+  stage.addEventListener('pointerdown', event => {
+    if (event.target instanceof HTMLCanvasElement) stage.focus({ preventScroll: true });
+  });
+  for (const button of buttons) {
+    const direction = Number(button.dataset.steer);
+    button.addEventListener('pointerdown', event => {
+      if (!enabled || event.button !== 0) return;
+      button.setPointerCapture(event.pointerId);
+      inputs.set(event.pointerId, direction);
+      update();
+    });
+    for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) {
+      button.addEventListener(type, event => { if (inputs.delete(event.pointerId)) update(); });
+    }
+    for (const type of ['keydown', 'keyup']) {
+      button.addEventListener(type, event => {
+        if (!enabled || !['Space', 'Enter'].includes(event.code)) return;
+        event.preventDefault();
+        if (type === 'keydown') inputs.set(event.code, direction);
+        else inputs.delete(event.code);
+        update();
+      });
+    }
+  }
+  return { clear, setMaximum(value) { maximum = value; row.hidden = !maximum; }, enable(value) {
+    enabled = value && maximum > 0;
+    for (const button of buttons) button.disabled = !enabled;
+    if (!enabled) clear();
+  } };
+}
+
+function connect({ setSnapshot, enableFollow }) {
   const start = byId('start');
   const pause = byId('pause');
   const reset = byId('reset-walk');
@@ -340,6 +440,7 @@ function connect(setSnapshot) {
   let checkpoint;
   let backend;
   let lastStatus = 0;
+  const steering = connectSteering(value => worker?.postMessage({ type: 'target-turn', value }));
 
   function fail(message) {
     status.textContent = 'Simulation unavailable';
@@ -347,6 +448,7 @@ function connect(setSnapshot) {
     for (const button of controls) button.disabled = true;
     targetSpeed.disabled = true;
     speedControl.hidden = true;
+    steering.enable(false);
     worker?.terminate();
     worker = undefined;
     start.disabled = false;
@@ -367,7 +469,7 @@ function connect(setSnapshot) {
     phase('Preparing the download…');
     note.textContent = '';
     try {
-      worker = new Worker(new URL('physics-worker.js?v=8', import.meta.url), { type: 'module' });
+      worker = new Worker(new URL('physics-worker.js?v=10', import.meta.url), { type: 'module' });
     } catch (error) {
       fail(error.message);
       return;
@@ -397,6 +499,12 @@ function connect(setSnapshot) {
         loadingPanel.hidden = true;
         byId('start-panel').hidden = true;
         for (const button of controls) button.disabled = false;
+        steering.setMaximum(data.turn?.maximum ?? 0);
+        if (data.turn) {
+          enableFollow(data.turn.heading);
+          steering.enable(true);
+          stage.focus({ preventScroll: true });
+        }
         if (data.speed) {
           targetSpeed.min = data.speed.minimum;
           targetSpeed.max = data.speed.maximum;
@@ -408,11 +516,12 @@ function connect(setSnapshot) {
       }
       if (data.type === 'frame') {
         setSnapshot(data);
-        const speed = data.seconds ? data.distance/data.seconds : 0;
+        const speed = data.seconds ? data.pathLength/data.seconds : 0;
         byId('speed').textContent = `${speed.toFixed(2)} m/s`;
         byId('duration').textContent = `${data.seconds.toFixed(2)} s`;
         byId('distance').textContent = `${data.distance.toFixed(2)} m`;
         pause.disabled = push.disabled = !!data.done;
+        steering.enable(!paused && !data.done);
         const runStatus = data.done ? `${data.done} · click Reset walk`
           : paused ? 'Paused on this device' : 'Running on this device';
         if (status.textContent !== runStatus) status.textContent = runStatus;
@@ -431,11 +540,16 @@ function connect(setSnapshot) {
 
   pause.addEventListener('click', () => {
     paused = !paused;
+    steering.enable(!paused);
     pause.textContent = paused ? 'Resume' : 'Pause';
     status.textContent = paused ? 'Paused on this device' : 'Running on this device';
     worker?.postMessage({ type: 'pause', paused });
   });
-  reset.addEventListener('click', () => worker?.postMessage({ type: 'reset' }));
+  reset.addEventListener('click', () => {
+    steering.clear();
+    worker?.postMessage({ type: 'reset' });
+    stage.focus({ preventScroll: true });
+  });
   push.addEventListener('click', () => worker?.postMessage({ type: 'push' }));
   targetSpeed.addEventListener('input', () => {
     showTarget(targetSpeed.value);
@@ -445,16 +559,16 @@ function connect(setSnapshot) {
 }
 
 connectFullscreen();
-createViewer().then(async setSnapshot => {
+createViewer().then(async viewer => {
   if (stage.dataset.previewPose) {
     try {
       const response = await fetch(stage.dataset.previewPose);
-      if (response.ok) setSnapshot(await response.json());
+      if (response.ok) viewer.setSnapshot(await response.json());
     } catch {
       // The default anatomy is still available if the optional preview is missing.
     }
   }
-  connect(setSnapshot);
+  connect(viewer);
   status.textContent = 'MS-Human-700 anatomy';
   byId('start-panel').hidden = false;
 }).catch(error => {

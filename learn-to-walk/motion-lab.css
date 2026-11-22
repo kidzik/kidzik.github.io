@@ -51,6 +51,15 @@ body:has(.viewer-dialog[open]) { overflow: hidden; }
 .stage :focus-visible, .replay-stage :focus-visible { outline-color: #efcfb5; }
 .toolbar, .under-viewer { display: flex; justify-content: space-between; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
 .toolbar { padding: 9px 12px; }
+.steering-control { display: flex; align-items: center; gap: 6px 9px; flex-wrap: wrap; padding: 7px 12px; border-top: 1px solid var(--line); font-size: .82rem; }
+.steering-control button { min-height: 36px; min-width: 63px; touch-action: none; user-select: none; }
+.steering-control button.steering-active, #follow-view[aria-pressed="true"] { background: #f1ddcf; border-color: #b47765; }
+#steering-direction { min-width: 7ch; }
+.steering-hint { opacity: .8; }
+@media (pointer: coarse) {
+  .steering-control button { min-height: 44px; }
+  .steering-keys { display: none; }
+}
 .view-controls, .display-controls, .legend { display: flex; align-items: center; gap: 6px; }
 .display-controls { flex-wrap: wrap; gap: 6px 14px; font-size: .82rem; }
 .display-controls label { display: flex; align-items: center; gap: 4px; }
