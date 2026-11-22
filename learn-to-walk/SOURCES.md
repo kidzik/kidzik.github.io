@@ -8,3 +8,7 @@ This page is a noncommercial research demonstration by Lukas Kidzinski. The live
 - **Reference motion.** Seungbum Koo, Junyo Boo, Dongwook Seo, and Minseung Kim (2025), [Comprehensive Human Locomotion and Electromyography Dataset: Gait120](https://doi.org/10.6084/m9.figshare.27677016.v1), [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). We averaged the S053 level-walking trials 01–04, independently fitted the markers to MS-Human-700, and repeated the fitted walking cycle. The browser bundle uses the resulting reference features.
 - **Policy and observations.** [MuscleMimic](https://github.com/amathislab/MuscleMimic), [Apache 2.0](MuscleMimic-LICENSE.txt). Browser inference uses the exported actor and a JavaScript implementation of the simulation observations.
 - **Browser runtime.** [MuJoCo 3.8.0](https://github.com/google-deepmind/mujoco/tree/3.8.0), [Apache 2.0](vendor/MuJoCo-LICENSE.txt). [ONNX Runtime Web 1.31.1](https://github.com/microsoft/onnxruntime/tree/v1.31.1), [MIT](vendor/ONNX-Runtime-LICENSE.txt) and [third-party notices](vendor/ONNX-Runtime-ThirdPartyNotices.txt). [Three.js 0.184.0](https://github.com/mrdoob/three.js/tree/r184), [MIT](vendor/three-LICENSE.txt).
+
+## Steering course
+
+The [steering course](steer/) uses a project-trained actor exported from checkpoint 3,469,783,040. That checkpoint passed all four offline steering tests at ±8°/s before publication. This mode uses the same MS-Human-700 body, anatomy and Gait120-derived walking reference, with the reference path curved in response to player commands.

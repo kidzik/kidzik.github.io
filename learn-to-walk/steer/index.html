@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Steering course · Learn to walk</title>
+  <meta name="description" content="Steer a learned, 700-muscle walking controller through six gates.">
+  <meta name="theme-color" content="#101b23">
+  <link rel="canonical" href="https://kidzinski.com/learn-to-walk/steer/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./steering.css?v=1">
+  <script type="importmap">{"imports":{"three":"../vendor/three.module.min.js","orbit-controls":"../vendor/OrbitControls.js"}}</script>
+  <script type="module" src="./viewer.js?v=1"></script>
+</head>
+<body>
+  <main>
+    <header>
+      <a class="back" href="../">← Learn to walk</a>
+      <h1>Steering course</h1>
+      <p>Walk through six gates without falling.</p>
+    </header>
+    <div class="viewer" id="walking-viewer">
+      <div class="stage" id="stage" tabindex="0" aria-label="Steering simulation" data-steering data-course-heading="-1.5672083909222894"
+        data-preview-pose="../media/431841280/preview-pose.json" data-policy="./model/">
+        <div class="hud">
+          <div><span>Gates</span><strong id="gate-score">0 / 6</strong><small id="gate-next">Next gate 1</small></div>
+          <div><span>Time</span><strong id="duration">0.00 s</strong></div>
+          <div class="turn-hud"><span>Turn command</span><strong id="turn-rate">0.0°/s</strong></div>
+          <div class="speed-hud"><span>Speed</span><strong id="speed">—</strong></div>
+        </div>
+        <p class="stage-label" id="run-status" role="status">Loading anatomy…</p>
+        <div class="start" id="start-panel" hidden>
+          <button id="start" class="primary" type="button">Start course <span aria-hidden="true">↗</span></button>
+          <small id="start-note">Runs on your device. First load is up to 180 MB.</small>
+          <div class="load-progress" id="load-progress" hidden>
+            <progress id="download-meter" aria-label="Model download progress"></progress>
+            <small id="download-details" role="status"></small>
+          </div>
+        </div>
+        <div class="stage-controls" role="group" aria-label="Run controls">
+          <button id="pause" type="button" disabled>Pause</button>
+          <button id="reset-walk" type="button" disabled>Restart</button>
+          <button id="full-screen" type="button" aria-controls="walking-viewer" hidden>Full screen</button>
+        </div>
+        <span id="ball-status" hidden></span>
+      </div>
+      <div class="deck">
+        <div class="dpad" role="group" aria-label="Steering and pace">
+          <button type="button" aria-label="Steer left" data-steer-key="left" disabled>←</button>
+          <button type="button" aria-label="Slow down" data-steer-key="slow" disabled>↓</button>
+          <button type="button" aria-label="Speed up" data-steer-key="fast" disabled>↑</button>
+          <button type="button" aria-label="Steer right" data-steer-key="right" disabled>→</button>
+        </div>
+        <div class="keys">
+          <span><kbd>A</kbd> <kbd>D</kbd> or <kbd>←</kbd> <kbd>→</kbd> Steer</span>
+          <span><kbd>W</kbd> <kbd>S</kbd> Pace</span>
+          <span><kbd>Shift</kbd> Sharper turn</span>
+          <span><kbd>R</kbd> Restart</span>
+        </div>
+      </div>
+      <div class="options">
+        <button id="follow-camera" type="button">Follow camera</button>
+        <button data-view="side" type="button">Side view</button>
+        <label><input type="checkbox" id="muscles" checked> Muscles</label>
+        <label><input type="checkbox" id="activation" checked> Activation</label>
+        <div id="speed-control" class="pace" hidden>
+          <label for="target-speed">Cruise speed</label>
+          <input id="target-speed" type="range" step="0.01" disabled>
+          <span id="target-speed-value" aria-hidden="true"></span>
+        </div>
+      </div>
+      <div hidden><input type="checkbox" id="ball-throws"><span id="coverage"></span><span id="distance"></span><button id="push" type="button" disabled></button></div>
+    </div>
+    <dialog id="viewer-dialog" aria-label="Full screen steering simulation"></dialog>
+    <p id="status-note" class="runtime" role="status"></p>
+    <footer>
+      <p>The keys set the requested turn and speed. The neural controller moves the body by activating 700 simulated muscles.</p>
+      <p>Anatomy adapted from BodyParts3D, © The Database Center for Life Science, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. <a href="../SOURCES.md">Model and sources</a>.</p>
+    </footer>
+  </main>
+</body>
+</html>
