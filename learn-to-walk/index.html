@@ -9,9 +9,9 @@
   <link rel="canonical" href="https://kidzinski.com/learn-to-walk/">
   <link rel="icon" href="../favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../css/site.css?v=2">
-  <link rel="stylesheet" href="./motion-lab.css?v=11">
+  <link rel="stylesheet" href="./motion-lab.css?v=12">
   <script type="importmap">{"imports":{"three":"./vendor/three.module.min.js"}}</script>
-  <script type="module" src="./viewer.js?v=11"></script>
+  <script type="module" src="./viewer.js?v=12"></script>
   <script type="module" src="./motion-lab.js?v=5"></script>
 </head>
 <body>
@@ -33,7 +33,7 @@
     <header class="page-head">
       <p class="walk-kicker"><a href="../#research">Selected projects</a> <span aria-hidden="true">/</span> Interactive demo</p>
       <h1>Learn to walk</h1>
-      <p>A neural network controls 700 simulated muscles to make this model walk. Turn on <strong>Throw balls</strong> to see how the walker handles a hit.</p>
+      <p>A neural network controls 700 simulated muscles to make this model walk. Use <strong>Throw ball</strong> to see how the walker handles a hit.</p>
     </header>
 
     <section id="live" aria-label="Live walking simulation">
@@ -63,7 +63,8 @@
           <div class="display-controls">
             <label><input type="checkbox" id="muscles" checked> Muscles</label>
             <label><input type="checkbox" id="activation" checked> Activation</label>
-            <label><input type="checkbox" id="ball-throws" autocomplete="off"> Throw balls</label>
+            <button id="throw-ball" type="button" title="Throw one ball (B)" disabled>Throw ball</button>
+            <label><input type="checkbox" id="ball-throws" autocomplete="off"> Auto-throw</label>
           </div>
           <button type="button" id="full-screen" aria-controls="walking-viewer" hidden>Full screen</button>
         </div>
@@ -77,6 +78,8 @@
           <label for="target-speed">Target forward speed</label>
           <input type="range" id="target-speed" step="0.01" disabled>
           <span id="target-speed-value" aria-hidden="true"></span>
+          <button type="button" data-pace="-1" title="Down arrow or S">↓ Slower</button>
+          <button type="button" data-pace="1" title="Up arrow or W">↑ Faster</button>
         </div>
       </div>
       <dialog class="viewer-dialog" id="viewer-dialog" aria-label="Full screen walking simulation"></dialog>

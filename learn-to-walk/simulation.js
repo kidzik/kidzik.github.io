@@ -1,4 +1,4 @@
-import { addBallBody, BallThrows } from './ball.js?v=4';
+import { addBallBody, BallThrows } from './ball.js?v=5';
 import { TurnReference, yawOf } from './turn-reference.js?v=1';
 
 // Browser implementation of the checkpoint's observation and control contract.
@@ -351,7 +351,7 @@ export class WalkingSimulation {
     return outputs.mean_action.data;
   }
 
-  async step() {
+  async step(throwBall = false) {
     if (this.done) return this.done;
     const { data, manifest, mujoco, model } = this;
     this.observe();
@@ -369,7 +369,7 @@ export class WalkingSimulation {
     data.xfrc_applied[manifest.pelvis*6] = lateralForce*Math.cos(yaw);
     data.xfrc_applied[manifest.pelvis*6+1] = lateralForce*Math.sin(yaw);
     if (this.pushFrames > 0) this.pushFrames--;
-    this.ball?.advance(this.frame, yaw);
+    this.ball?.advance(this.frame, yaw, throwBall);
     const x = data.qpos[0], y = data.qpos[1];
     for (let i = 0; i < manifest.substeps; i++) mujoco.mj_step(model, data);
     this.pathLength += Math.hypot(data.qpos[0]-x, data.qpos[1]-y);

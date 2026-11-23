@@ -1,4 +1,4 @@
-import { WalkingSimulation } from './simulation.js?v=9';
+import { WalkingSimulation } from './simulation.js?v=10';
 
 let simulation;
 let loading = false;
@@ -6,6 +6,7 @@ let paused = true;
 let scheduled = false;
 let pendingReset = false;
 let pendingPush = false;
+let pendingThrow = false;
 let pendingTargetSpeed;
 let pendingTargetTurn;
 let throwsEnabled = false;
@@ -143,6 +144,7 @@ async function tick() {
       simulation.reset();
       pendingReset = false;
       pendingPush = false;
+      pendingThrow = false;
       deadline = now;
       publish();
     }
@@ -153,7 +155,9 @@ async function tick() {
       pendingPush = false;
     }
     const start = performance.now();
-    await simulation.step();
+    const throwBall = pendingThrow;
+    pendingThrow = false;
+    await simulation.step(throwBall);
     const duration = performance.now() - start;
     averageMs = averageMs ? .92*averageMs + .08*duration : duration;
     if (simulation.ball?.activeUntil || simulation.frame % 2 === 0 || simulation.done) publish();
@@ -192,6 +196,8 @@ self.onmessage = ({ data }) => {
     }
   } else if (data.type === 'push') {
     pendingPush = true;
+  } else if (data.type === 'throw-ball' && simulation && !paused && !simulation.done) {
+    pendingThrow = true;
   } else if (data.type === 'target-speed') {
     pendingTargetSpeed = data.value;
   } else if (data.type === 'target-turn') {

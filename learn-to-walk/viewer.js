@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from './vendor/OrbitControls.js';
-import { compressedBuffer } from './simulation.js?v=9';
-import { BALL_RADIUS } from './ball.js?v=4';
+import { compressedBuffer } from './simulation.js?v=10';
+import { BALL_RADIUS } from './ball.js?v=5';
 
 const byId = id => document.getElementById(id);
 const stage = byId('stage');
@@ -216,13 +216,6 @@ async function createViewer() {
     dirty = true;
   }
   for (const toggle of [muscleToggle, activationToggle]) toggle.addEventListener('change', updatePalette);
-  ballToggle.addEventListener('change', () => {
-    if (!ballToggle.checked) {
-      ball.visible = false;
-      ballStatus.hidden = true;
-      dirty = true;
-    }
-  });
   controls.addEventListener('change', () => { dirty = true; });
 
   function setSnapshot(frame) {
@@ -233,7 +226,7 @@ async function createViewer() {
     current = frame;
     if (frame.seconds === 0 && Number.isFinite(frame.yaw)) initialYaw = frame.yaw;
     dirty = true;
-    ballStatus.hidden = !ballToggle.checked || !frame.ball;
+    ballStatus.hidden = !frame.ball;
     updatePalette();
   }
 
@@ -265,7 +258,7 @@ async function createViewer() {
         nextRotation.fromArray(b,index+3);
         bone.quaternion.slerpQuaternions(previousRotation,nextRotation,amount);
       }
-      ball.visible = ballToggle.checked && !!current.ball;
+      ball.visible = !!current.ball;
       if (ball.visible) {
         const position = current.ball.position;
         const from = previous.ball?.id === current.ball.id ? previous.ball.position : position;
@@ -414,10 +407,12 @@ function connect({ setSnapshot, enableFollow }) {
   const pause = byId('pause');
   const reset = byId('reset-walk');
   const push = byId('push');
-  const controls = [pause, reset, push];
+  const throwButton = byId('throw-ball');
+  const controls = [pause, reset, push, throwButton];
   const speedControl = byId('speed-control');
   const targetSpeed = byId('target-speed');
   const speedValue = byId('target-speed-value');
+  const paceButtons = [...speedControl.querySelectorAll('[data-pace]')];
   function showTarget(value) {
     const text = `${Number(value).toFixed(2)} m/s`;
     speedValue.textContent = text;
@@ -469,7 +464,7 @@ function connect({ setSnapshot, enableFollow }) {
     phase('Preparing the download…');
     note.textContent = '';
     try {
-      worker = new Worker(new URL('physics-worker.js?v=10', import.meta.url), { type: 'module' });
+      worker = new Worker(new URL('physics-worker.js?v=11', import.meta.url), { type: 'module' });
     } catch (error) {
       fail(error.message);
       return;
@@ -521,6 +516,7 @@ function connect({ setSnapshot, enableFollow }) {
         byId('duration').textContent = `${data.seconds.toFixed(2)} s`;
         byId('distance').textContent = `${data.distance.toFixed(2)} m`;
         pause.disabled = push.disabled = !!data.done;
+        throwButton.disabled = paused || !!data.done || !!data.ball;
         steering.enable(!paused && !data.done);
         const runStatus = data.done ? `${data.done} · click Reset walk`
           : paused ? 'Paused on this device' : 'Running on this device';
@@ -541,6 +537,7 @@ function connect({ setSnapshot, enableFollow }) {
   pause.addEventListener('click', () => {
     paused = !paused;
     steering.enable(!paused);
+    if (paused) throwButton.disabled = true;
     pause.textContent = paused ? 'Resume' : 'Pause';
     status.textContent = paused ? 'Paused on this device' : 'Running on this device';
     worker?.postMessage({ type: 'pause', paused });
@@ -551,9 +548,34 @@ function connect({ setSnapshot, enableFollow }) {
     stage.focus({ preventScroll: true });
   });
   push.addEventListener('click', () => worker?.postMessage({ type: 'push' }));
-  targetSpeed.addEventListener('input', () => {
+  throwButton.addEventListener('click', () => {
+    throwButton.disabled = true;
+    worker?.postMessage({ type: 'throw-ball' });
+    stage.focus({ preventScroll: true });
+  });
+  function sendSpeed() {
     showTarget(targetSpeed.value);
     worker?.postMessage({ type: 'target-speed', value: targetSpeed.valueAsNumber });
+  }
+  function changePace(direction) {
+    targetSpeed.stepUp(3*direction);
+    sendSpeed();
+  }
+  targetSpeed.addEventListener('input', sendSpeed);
+  for (const button of paceButtons) {
+    button.addEventListener('click', () => changePace(Number(button.dataset.pace)));
+  }
+  byId('walking-viewer').addEventListener('keydown', event => {
+    if (event.ctrlKey || event.altKey || event.metaKey || event.target.closest('input, select, textarea, [contenteditable]')) return;
+    if (event.code === 'KeyB' && !throwButton.disabled && !event.repeat) {
+      event.preventDefault();
+      throwButton.click();
+    }
+    const direction = { ArrowUp: 1, KeyW: 1, ArrowDown: -1, KeyS: -1 }[event.code];
+    if (direction && !targetSpeed.disabled) {
+      event.preventDefault();
+      changePace(direction);
+    }
   });
   ballToggle.addEventListener('change', () => worker?.postMessage({ type: 'ball-throws', enabled: ballToggle.checked }));
 }
