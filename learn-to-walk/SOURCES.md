@@ -1,6 +1,6 @@
 # Learn to walk · sources and licenses
 
-This page is a noncommercial research demonstration by Lukas Kidzinski. The live controller was trained for this project and exported to ONNX from checkpoint 3,469,783,040, which passed four offline steering trials at ±8°/s. The controller follows a walking reference that bends in response to steering commands. The push replay and stride images were recorded separately from the 431,841,280-step biomechanics checkpoint.
+This page is a noncommercial research demonstration by Lukas Kidzinski. The live controller was trained for this project and exported to ONNX from checkpoint 4,587,663,360, which passed four offline steering trials at ±28°/s. The controller follows a walking reference that bends in response to steering commands. The push replay and stride images were recorded separately from the 431,841,280-step biomechanics checkpoint.
 
 - **Simulation body.** [MS-Human-700](https://github.com/LNSGroup/MS-Human-700), LNSGroup, commit `2d686957aefd5739cf4d2859a6acfd94c8f84400`. [Model license](MS-Human-700-LICENSE.txt). The exported model uses an equivalent free-root coordinate, small adjustments to dependent knee joint limits, and four foot load sensors. The browser compiles this modified MuJoCo XML.
 - **Upper-limb sources.** The [MS-Human-700 paper](https://arxiv.org/html/2312.05473v1#S3) cites the OpenSim work of Saul and colleagues. See the [MoBL-ARMS terms and citations](MoBL-ARMS-NOTICE.md), reproduced from the [upstream distribution](https://github.com/CEINMS-RT/UpperLimbModel#license).
